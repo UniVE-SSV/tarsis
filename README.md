@@ -1,5 +1,7 @@
 # TARSIS Abstract domain for static string analysis #
 
+![buildbadge](https://github.com/UniVE-SSV/tarsis/workflows/Java%20CI%20with%20Gradle/badge.svg)
+
 Implementation of _Twinning automata and regular expressions for string static analysis_, by Luca Negrini, Vincenzo Arceri, Pietro Ferrara and Agostino Cortesi.
 
 Links:
