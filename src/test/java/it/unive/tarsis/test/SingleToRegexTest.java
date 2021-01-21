@@ -4,13 +4,12 @@ import static it.unive.tarsis.test.TestUtil.addEdges;
 import static it.unive.tarsis.test.TestUtil.build;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
 import it.unive.tarsis.automata.algorithms.RegexExtractor;
 import it.unive.tarsis.regex.Atom;
+import org.junit.Test;
 
 public class SingleToRegexTest {
 

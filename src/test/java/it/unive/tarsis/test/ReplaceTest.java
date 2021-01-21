@@ -2,17 +2,15 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.junit.Test;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.regex.Atom;
 import it.unive.tarsis.regex.Comp;
 import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.TopAtom;
+import java.util.Collection;
+import java.util.HashSet;
+import org.junit.Test;
 
 public class ReplaceTest {
 
@@ -213,7 +211,8 @@ public class ReplaceTest {
 
 		Automaton a = Automata.union(Automata.mkAutomaton("pearl"), Automata.mkAutomaton("garnet"));
 
-		Automaton search = Automata.union(Automata.mkAutomaton(""), // apaeaaarala, agaaaranaeata
+		Automaton search = Automata.union(Automata.mkAutomaton(""), // apaeaaarala,
+																	// agaaaranaeata
 				Automata.mkAutomaton("ar"), // peal, ganet
 				Automata.mkAutomaton("rose"), // pearl, garnet
 				Automata.mkAutomaton("et")); // pearl, garna

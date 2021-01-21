@@ -1,5 +1,12 @@
 package it.unive.tarsis.automata;
 
+import it.unive.tarsis.automata.algorithms.StringReplacer;
+import it.unive.tarsis.regex.Atom;
+import it.unive.tarsis.regex.RegularExpression;
+import it.unive.tarsis.regex.TopAtom;
+import it.unive.tarsis.strings.ExtChar;
+import it.unive.tarsis.strings.ExtString;
+import it.unive.tarsis.strings.TopExtChar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
@@ -13,16 +20,7 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
-
-import it.unive.tarsis.automata.algorithms.StringReplacer;
-import it.unive.tarsis.regex.Atom;
-import it.unive.tarsis.regex.RegularExpression;
-import it.unive.tarsis.regex.TopAtom;
-import it.unive.tarsis.strings.ExtChar;
-import it.unive.tarsis.strings.ExtString;
-import it.unive.tarsis.strings.TopExtChar;
 
 /**
  * Utility class for managing instances of {@link Automaton}.
@@ -33,12 +31,14 @@ import it.unive.tarsis.strings.TopExtChar;
 public class Automata {
 
 	/**
-	 * Yields {@code true} if and only if {@code first} is <b>always</b> contained
-	 * into {@code second}, that is, if {@code first} is a single path automaton and
-	 * its longest string is contained in all paths (without SCCs).
+	 * Yields {@code true} if and only if {@code first} is <b>always</b>
+	 * contained into {@code second}, that is, if {@code first} is a single path
+	 * automaton and its longest string is contained in all paths (without
+	 * SCCs).
 	 * 
 	 * @param first  the sub-automaton
 	 * @param second the super-automaton
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public static boolean mustBeContained(Automaton first, Automaton second) {
@@ -81,6 +81,7 @@ public class Automata {
 	 * 
 	 * @param first  the sub-automaton
 	 * @param second the super-automaton
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public static boolean isContained(Automaton first, Automaton second) {
@@ -92,6 +93,7 @@ public class Automata {
 	 * recognized by the given automaton.
 	 * 
 	 * @param automaton the original automaton
+	 * 
 	 * @return the prefix automaton
 	 */
 	public static Automaton prefix(Automaton automaton) {
@@ -108,6 +110,7 @@ public class Automata {
 	 * recognized by the given automaton.
 	 * 
 	 * @param automaton the original automaton
+	 * 
 	 * @return the suffix automaton
 	 */
 	public static Automaton suffix(Automaton automaton) {
@@ -120,10 +123,11 @@ public class Automata {
 	}
 
 	/**
-	 * Yields the automaton that recognizes all possible substrings of the strings
-	 * recognized by the given automaton.
+	 * Yields the automaton that recognizes all possible substrings of the
+	 * strings recognized by the given automaton.
 	 * 
 	 * @param a the original automaton
+	 * 
 	 * @return the factors automaton
 	 */
 	public static Automaton factors(Automaton a) {
@@ -136,6 +140,7 @@ public class Automata {
 	 * 
 	 * @param first  the first automaton
 	 * @param second the second automaton
+	 * 
 	 * @return the union of the alphabets
 	 */
 	public static Set<RegularExpression> alphabetUnion(Automaton first, Automaton second) {
@@ -157,6 +162,7 @@ public class Automata {
 	 * language.
 	 * 
 	 * @param automaton the automaton
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public static boolean isEmptyLanguageAccepted(Automaton automaton) {
@@ -168,6 +174,7 @@ public class Automata {
 	 * 
 	 * @param first  the first automata
 	 * @param second the first automata
+	 * 
 	 * @return the intersection
 	 */
 	public static Automaton intersection(Automaton first, Automaton second) {
@@ -184,6 +191,7 @@ public class Automata {
 	 * Computes the concatenation between the given automata.
 	 * 
 	 * @param automata the automata to concatenate
+	 * 
 	 * @return the concatenation
 	 */
 	public static Automaton concat(Automaton... automata) {
@@ -202,6 +210,7 @@ public class Automata {
 	 * 
 	 * @param first  the first automata
 	 * @param second the first automata
+	 * 
 	 * @return the concatenation
 	 */
 	public static Automaton concat(Automaton first, Automaton second) {
@@ -254,6 +263,7 @@ public class Automata {
 	 * 
 	 * @param automaton the automata input
 	 * @param alphabet  the alphabet to use during complementation
+	 * 
 	 * @return the complement of the automata
 	 */
 	public static Automaton complement(Automaton automaton, Set<RegularExpression> alphabet) {
@@ -276,10 +286,12 @@ public class Automata {
 	}
 
 	/**
-	 * Performs the totalization of the given automaton w.r.t the given alphabet.
+	 * Performs the totalization of the given automaton w.r.t the given
+	 * alphabet.
 	 * 
 	 * @param automaton the automaton to totalize
 	 * @param alphabet  the alphabet to use during totalization
+	 * 
 	 * @return the totalized automaton
 	 */
 	public static Automaton totalize(Automaton automaton, Set<RegularExpression> alphabet) {
@@ -316,6 +328,7 @@ public class Automata {
 	 * Computes the union between the given automata.
 	 * 
 	 * @param automata the automata to unite
+	 * 
 	 * @return the union
 	 */
 	public static Automaton union(Automaton... automata) {
@@ -332,6 +345,7 @@ public class Automata {
 	 * 
 	 * @param first  the first automata
 	 * @param second the first automata
+	 * 
 	 * @return the intersection
 	 */
 	public static Automaton union(Automaton first, Automaton second) {
@@ -378,6 +392,7 @@ public class Automata {
 	 * Creates a new automaton composed of a loop over the given automaton.
 	 * 
 	 * @param a the automaton
+	 * 
 	 * @return the star automaton
 	 */
 	public static Automaton star(Automaton a) {
@@ -444,6 +459,7 @@ public class Automata {
 	 * Builds an automaton recognizing only the given string.
 	 * 
 	 * @param s the string
+	 * 
 	 * @return the automaton
 	 */
 	public static Automaton mkAutomaton(String s) {
@@ -464,6 +480,7 @@ public class Automata {
 	 * Builds an automaton recognizing only the given extended string.
 	 * 
 	 * @param s the string
+	 * 
 	 * @return the automaton
 	 */
 	public static Automaton mkAutomaton(ExtString s) {
@@ -496,6 +513,7 @@ public class Automata {
 	 * Performs the reverse of the given automaton.
 	 * 
 	 * @param a the automaton to reverse
+	 * 
 	 * @return the reversed automaton
 	 */
 	public static Automaton reverse(Automaton a) {
@@ -532,16 +550,17 @@ public class Automata {
 	}
 
 	/**
-	 * Applies the given comparison function to all the strings of the languages of
-	 * both automata. This is a <b>must</b> operation, meaning that all possible
-	 * pairs of strings composed by a string of the language of {@code first} and a
-	 * string of the language of {@code second} must satisfy the property expressed
-	 * by {@code comparer}. If this is not the case, this method returns
-	 * {@code false}.
+	 * Applies the given comparison function to all the strings of the languages
+	 * of both automata. This is a <b>must</b> operation, meaning that all
+	 * possible pairs of strings composed by a string of the language of
+	 * {@code first} and a string of the language of {@code second} must satisfy
+	 * the property expressed by {@code comparer}. If this is not the case, this
+	 * method returns {@code false}.
 	 * 
 	 * @param first    the first automaton
 	 * @param second   the second automaton
 	 * @param comparer the comparison function between strings of the languages
+	 * 
 	 * @return {@code true} if that condition hold
 	 */
 	public static boolean mustLanguageCheck(Automaton first, Automaton second,
@@ -554,16 +573,17 @@ public class Automata {
 	}
 
 	/**
-	 * Applies the given comparison function to all the strings of the languages of
-	 * both automata. This is a <b>may</b> operation, meaning that at least one
-	 * possible pair of strings composed by a string of the language of
-	 * {@code first} and a string of the language of {@code second} must satisfy the
-	 * property expressed by {@code comparer}. If this is not the case, this method
-	 * returns {@code false}.
+	 * Applies the given comparison function to all the strings of the languages
+	 * of both automata. This is a <b>may</b> operation, meaning that at least
+	 * one possible pair of strings composed by a string of the language of
+	 * {@code first} and a string of the language of {@code second} must satisfy
+	 * the property expressed by {@code comparer}. If this is not the case, this
+	 * method returns {@code false}.
 	 * 
 	 * @param first    the first automaton
 	 * @param second   the second automaton
 	 * @param comparer the comparison function between strings of the languages
+	 * 
 	 * @return {@code true} if that condition hold
 	 */
 	public static boolean mayLanguageCheck(Automaton first, Automaton second,
@@ -576,14 +596,15 @@ public class Automata {
 	}
 
 	/**
-	 * Yields a new automaton that is built by collapsing {@code origin}, that is,
-	 * by merging together subsequent states that are never the root of a branch,
-	 * the destination of a loop, or that have at least one outgoing transition
-	 * recognizing the top string.<br>
+	 * Yields a new automaton that is built by collapsing {@code origin}, that
+	 * is, by merging together subsequent states that are never the root of a
+	 * branch, the destination of a loop, or that have at least one outgoing
+	 * transition recognizing the top string.<br>
 	 * <br>
 	 * <b>{@code origin} is never modified by this method</b>.
 	 * 
 	 * @param origin the original automaton
+	 * 
 	 * @return the collapsed automaton
 	 */
 	public static Automaton collapse(Automaton origin) {
@@ -666,12 +687,14 @@ public class Automata {
 	}
 
 	/**
-	 * Yields a deterministic automaton equivalent to the given one. It the given
-	 * automaton is already deterministic, then that is returned instead. <br>
+	 * Yields a deterministic automaton equivalent to the given one. It the
+	 * given automaton is already deterministic, then that is returned instead.
+	 * <br>
 	 * <br>
 	 * The given automaton is never modified by this method.
 	 * 
 	 * @param origin the original automaton
+	 * 
 	 * @return a deterministic automaton equivalent to the given one.
 	 */
 	public static Automaton determinize(Automaton origin) {
@@ -778,13 +801,14 @@ public class Automata {
 	}
 
 	/**
-	 * Yields a new automaton that is built by exploding the given one, that is, by
-	 * ensuring that each transition recognizes regular expressions of at most one
-	 * character (excluding the ones recognizing the top string). <br>
+	 * Yields a new automaton that is built by exploding the given one, that is,
+	 * by ensuring that each transition recognizes regular expressions of at
+	 * most one character (excluding the ones recognizing the top string). <br>
 	 * <br>
 	 * <b>The given automaton is never modified by this method</b>.
 	 * 
 	 * @param a the automaton
+	 * 
 	 * @return the exploded automaton
 	 */
 	public static Automaton explode(Automaton a) {
@@ -822,11 +846,13 @@ public class Automata {
 	}
 
 	/**
-	 * Yields the sub-automaton contained in the given one that recognizes only the
-	 * longest string in the language of {@code a}. Note that this method assumes
-	 * that the given automaton is loop-free and that it has only one path.
+	 * Yields the sub-automaton contained in the given one that recognizes only
+	 * the longest string in the language of {@code a}. Note that this method
+	 * assumes that the given automaton is loop-free and that it has only one
+	 * path.
 	 * 
 	 * @param a the automaton
+	 * 
 	 * @return the sub-automaton
 	 */
 	public static Automaton extractLongestString(Automaton a) {
@@ -851,12 +877,13 @@ public class Automata {
 	}
 
 	/**
-	 * Yields a minimal automaton equivalent to the given one through Brzozowski's
-	 * minimization algorithm. <br>
+	 * Yields a minimal automaton equivalent to the given one through
+	 * Brzozowski's minimization algorithm. <br>
 	 * <br>
 	 * The given automaton is never modified.
 	 * 
 	 * @param origin the automaton
+	 * 
 	 * @return a minimal automaton equivalent to this one
 	 */
 	public static Automaton minimize(Automaton origin) {
@@ -875,22 +902,23 @@ public class Automata {
 
 	/**
 	 * Yields a new automaton where all occurrences of strings recognized by
-	 * {@code toReplace} are replaced with the automaton {@code str}, assuming that
-	 * {@code toReplace} is finite (i.e., no loops nor top-transitions). The
-	 * resulting automaton is then collapsed.<br>
+	 * {@code toReplace} are replaced with the automaton {@code str}, assuming
+	 * that {@code toReplace} is finite (i.e., no loops nor top-transitions).
+	 * The resulting automaton is then collapsed.<br>
 	 * <br>
-	 * If {@code toReplace} recognizes a single string, than this method performs a
-	 * must-replacement, meaning that the string recognized by {@code toReplace}
-	 * will effectively be replaced. Otherwise, occurrences of strings of
-	 * {@code toReplace} are not replaced in the resulting automaton: instead, a
-	 * branching will be introduced to model an or between the original string of
-	 * {@code toReplace} and the whole {@code str}. <br>
+	 * If {@code toReplace} recognizes a single string, than this method
+	 * performs a must-replacement, meaning that the string recognized by
+	 * {@code toReplace} will effectively be replaced. Otherwise, occurrences of
+	 * strings of {@code toReplace} are not replaced in the resulting automaton:
+	 * instead, a branching will be introduced to model an or between the
+	 * original string of {@code toReplace} and the whole {@code str}. <br>
 	 * <br>
 	 * <b>{@code origin} is never modified by this method</b>.
 	 * 
 	 * @param origin    the original automaton
 	 * @param toReplace the automaton recognizing the strings to replace
 	 * @param str       the automaton that must be used as replacement
+	 * 
 	 * @return the replaced automaton
 	 */
 	public static Automaton replace(Automaton origin, Automaton toReplace, Automaton str) {
@@ -914,6 +942,7 @@ public class Automata {
 	 * 
 	 * @param a the automaton
 	 * @param n the parameter of the widening operator
+	 * 
 	 * @return the widened automaton
 	 */
 	public static Automaton widening(Automaton a, int n) {
@@ -974,15 +1003,16 @@ public class Automata {
 	}
 
 	/**
-	 * Yields the set of regular expressions of length at most {@code n} that can be
-	 * recognized starting from the given state. In this context, the length of a
-	 * regular expression is the number of sub-expressions joined together to build
-	 * the final regular expression. For instance, given {@code r1 = aab} and
-	 * {@code r2 = c*}, {@code r = r1r2} has length 2. Each regular expression
-	 * returned by this method is built by inspecting the outgoing transition from
-	 * the given state {@code s}, and, for each such transition, by prepending the
-	 * symbol on the transition to each regular expression returned by recursively
-	 * calling this method on the destination state after reducing {@code n} by 1.
+	 * Yields the set of regular expressions of length at most {@code n} that
+	 * can be recognized starting from the given state. In this context, the
+	 * length of a regular expression is the number of sub-expressions joined
+	 * together to build the final regular expression. For instance, given
+	 * {@code r1 = aab} and {@code r2 = c*}, {@code r = r1r2} has length 2. Each
+	 * regular expression returned by this method is built by inspecting the
+	 * outgoing transition from the given state {@code s}, and, for each such
+	 * transition, by prepending the symbol on the transition to each regular
+	 * expression returned by recursively calling this method on the destination
+	 * state after reducing {@code n} by 1.
 	 */
 	private static Set<RegularExpression> getNextSymbols(Automaton a, State s, int n) {
 		Set<RegularExpression> result = new HashSet<>();

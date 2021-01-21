@@ -67,8 +67,8 @@ public class Transition {
 	}
 
 	/**
-	 * Yields {@code true} if and only if this transition recognizes <b>only</b> the
-	 * empty string.
+	 * Yields {@code true} if and only if this transition recognizes <b>only</b>
+	 * the empty string.
 	 * 
 	 * @return {@code true} if and only if that condition holds
 	 */

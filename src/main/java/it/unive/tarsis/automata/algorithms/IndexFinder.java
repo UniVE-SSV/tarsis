@@ -1,17 +1,15 @@
 package it.unive.tarsis.automata.algorithms;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
 import it.unive.tarsis.regex.TopAtom;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * An algorithm that finds all possible indexes of the first occurrences of an
@@ -23,20 +21,21 @@ import it.unive.tarsis.regex.TopAtom;
 public class IndexFinder {
 
 	/**
-	 * Yields the minimum and maximum indexes where {@code search} first appears in
-	 * {@code automaton}. If the second element of the returned pair is
-	 * {@code null}, it means infinity, that is, there is at least a top transition
-	 * or a loop preceding one of the first matches.<br>
+	 * Yields the minimum and maximum indexes where {@code search} first appears
+	 * in {@code automaton}. If the second element of the returned pair is
+	 * {@code null}, it means infinity, that is, there is at least a top
+	 * transition or a loop preceding one of the first matches.<br>
 	 * <br>
-	 * Note that, if {@code search} accepts the empty string, the returned pair will
-	 * be {@code 0, automaton.maxLengthString()}, or {@code 0, null} if
+	 * Note that, if {@code search} accepts the empty string, the returned pair
+	 * will be {@code 0, automaton.maxLengthString()}, or {@code 0, null} if
 	 * {@code automaton} is not finite.
 	 * 
 	 * @param automaton the automaton
 	 * @param search    the automaton to search
+	 * 
 	 * @return a pair of integers, representing the minimum and maximum indexes
-	 *         where {@code search} first appears in {@code automaton}, or
-	 *         {@code null} to represent infinity
+	 *             where {@code search} first appears in {@code automaton}, or
+	 *             {@code null} to represent infinity
 	 */
 	public static Pair<Integer, Integer> findIndexesOf(Automaton automaton, Automaton search) {
 		Automaton exploded = Automata.explode(automaton);

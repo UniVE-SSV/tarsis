@@ -2,10 +2,9 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import it.unive.tarsis.AutomatonString;
 import it.unive.tarsis.automata.Automata;
+import org.junit.Test;
 
 public class ContainsTest {
 
@@ -76,7 +75,8 @@ public class ContainsTest {
 		AutomatonString a = new AutomatonString("panda!mc", "mc!papanda", "polo!mc!panda");
 		AutomatonString search = new AutomatonString("panda", "mc");
 
-		// {"panda!mc", "mc!papanda", "polo!mc!panda"}.contains(panda, mc) = true
+		// {"panda!mc", "mc!papanda", "polo!mc!panda"}.contains(panda, mc) =
+		// true
 		assertEquals(a.contains(search), true);
 	}
 
@@ -94,7 +94,8 @@ public class ContainsTest {
 		AutomatonString a = new AutomatonString("panda", "pandone", "pandina", "pandetta");
 		AutomatonString search = new AutomatonString("pa", "pan");
 
-		// {"panda", "pandone", "pandina", "pandetta"}.contains("pa", "pan") = true
+		// {"panda", "pandone", "pandina", "pandetta"}.contains("pa", "pan") =
+		// true
 		assertEquals(a.contains(search), true);
 	}
 

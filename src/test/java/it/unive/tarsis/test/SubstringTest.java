@@ -6,11 +6,6 @@ import static it.unive.tarsis.strings.ExtString.mkStrings;
 import static it.unive.tarsis.strings.ExtString.mkTopString;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.junit.Test;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.algorithms.RegexExtractor;
@@ -20,6 +15,9 @@ import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.Star;
 import it.unive.tarsis.regex.TopAtom;
 import it.unive.tarsis.strings.ExtString;
+import java.util.Collection;
+import java.util.HashSet;
+import org.junit.Test;
 
 public class SubstringTest {
 
@@ -197,7 +195,8 @@ public class SubstringTest {
 						new Atom("x=7;")).substring(2, 9),
 				// mkString("7;"),
 				// mkString(";x=7;"),
-				// mkTopString(1).concat(mkString(";x=7;")), THESE ARE ALL INCOMPLETE SUBSTRINGS
+				// mkTopString(1).concat(mkString(";x=7;")), THESE ARE ALL
+				// INCOMPLETE SUBSTRINGS
 				mkString(";y=;x=7"), mkString(";y=;y=;"), mkString(";y=;y=").concat(mkTopString(1)),
 				mkString(";y=").concat(mkTopString(1)).concat(mkString(";x=")),
 				mkString(";y=").concat(mkTopString(1)).concat(mkString(";y=")),

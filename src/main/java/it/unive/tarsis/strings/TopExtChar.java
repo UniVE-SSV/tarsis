@@ -9,21 +9,21 @@ import it.unive.tarsis.regex.TopAtom;
  * @author <a href="mailto:luca.negrini@unive.it">Luca Negrini</a>
  */
 public class TopExtChar extends ExtChar {
-	
+
 	/**
-	 * The singleton instance
+	 * The singleton instance.
 	 */
 	public static final TopExtChar INSTANCE = new TopExtChar();
-	
+
 	private TopExtChar() {
 		super(TopAtom.STRING.charAt(0));
 	}
-	
+
 	@Override
 	public boolean is(char ch) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof TopExtChar;

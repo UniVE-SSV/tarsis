@@ -16,12 +16,6 @@ import static it.unive.tarsis.automata.Automata.union;
 import static it.unive.tarsis.automata.Automata.widening;
 import static it.unive.tarsis.automata.algorithms.RegexExtractor.getMinimalBrzozowskiRegex;
 
-import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
@@ -30,6 +24,10 @@ import it.unive.tarsis.automata.algorithms.IndexFinder;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.TopAtom;
 import it.unive.tarsis.strings.ExtString;
+import java.util.Collection;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * A string modeled through the Tarsis abstract domain.
@@ -40,8 +38,8 @@ import it.unive.tarsis.strings.ExtString;
 public class AutomatonString {
 
 	/**
-	 * Maximum widening threshold, or default threshold if there is no difference in
-	 * the size of the two automata
+	 * Maximum widening threshold, or default threshold if there is no
+	 * difference in the size of the two automata.
 	 */
 	public static final int WIDENING_CAP = 5;
 
@@ -51,8 +49,8 @@ public class AutomatonString {
 	private final Automaton automaton;
 
 	/**
-	 * The regular expression corresponding to this string. This is lazily computed,
-	 * thus always use {@link #getRegex()} to access it.
+	 * The regular expression corresponding to this string. This is lazily
+	 * computed, thus always use {@link #getRegex()} to access it.
 	 */
 	private RegularExpression regex;
 
@@ -106,9 +104,9 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Yields the regular expression that is equivalent to the automaton underlying
-	 * this string. The regular expression is computed the first time that this
-	 * method is invoked.
+	 * Yields the regular expression that is equivalent to the automaton
+	 * underlying this string. The regular expression is computed the first time
+	 * that this method is invoked.
 	 * 
 	 * @return the regular expression
 	 */
@@ -158,10 +156,11 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Performs the least upper bound between this string and the given one, without
-	 * simplifying (i.e., determinizing and minimizing) the result.
+	 * Performs the least upper bound between this string and the given one,
+	 * without simplifying (i.e., determinizing and minimizing) the result.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return the least upper bound
 	 */
 	public AutomatonString lub(AutomatonString other) {
@@ -172,8 +171,9 @@ public class AutomatonString {
 	 * Performs the least upper bound between this string and the given one.
 	 * 
 	 * @param other    the other string
-	 * @param simplify if true, the result will be simplified (i.e., determinized
-	 *                 and minimized)
+	 * @param simplify if true, the result will be simplified (i.e.,
+	 *                     determinized and minimized)
+	 * 
 	 * @return the least upper bound
 	 */
 	public AutomatonString lub(AutomatonString other, boolean simplify) {
@@ -190,12 +190,13 @@ public class AutomatonString {
 	/**
 	 * Performs the widening between this string and the given one, without
 	 * simplifying (i.e., determinizing and minimizing) the result, and by
-	 * automatically determining the threshold parameter. Such parameter will be the
-	 * difference in size between the two underlying automata, capped at
-	 * {@link #WIDENING_CAP}. If the two automata have the same size, the threshold
-	 * will be set to {@link #WIDENING_CAP}.
+	 * automatically determining the threshold parameter. Such parameter will be
+	 * the difference in size between the two underlying automata, capped at
+	 * {@link #WIDENING_CAP}. If the two automata have the same size, the
+	 * threshold will be set to {@link #WIDENING_CAP}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return the widened string
 	 */
 	public AutomatonString widen(AutomatonString other) {
@@ -208,7 +209,9 @@ public class AutomatonString {
 	 * given widening threshold.
 	 * 
 	 * @param other             the other string
-	 * @param wideningThreshold the threshold parameter of the widening operation
+	 * @param wideningThreshold the threshold parameter of the widening
+	 *                              operation
+	 * 
 	 * @return the widened string
 	 */
 	public AutomatonString widen(AutomatonString other, int wideningThreshold) {
@@ -216,15 +219,16 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Performs the widening between this string and the given one, by automatically
-	 * determining the threshold parameter. Such parameter will be the difference in
-	 * size between the two underlying automata, capped at {@link #WIDENING_CAP}. If
-	 * the two automata have the same size, the threshold will be set to
-	 * {@link #WIDENING_CAP}.
+	 * Performs the widening between this string and the given one, by
+	 * automatically determining the threshold parameter. Such parameter will be
+	 * the difference in size between the two underlying automata, capped at
+	 * {@link #WIDENING_CAP}. If the two automata have the same size, the
+	 * threshold will be set to {@link #WIDENING_CAP}.
 	 * 
 	 * @param other    the other string
-	 * @param simplify if true, the result will be simplified (i.e., determinized
-	 *                 and minimized)
+	 * @param simplify if true, the result will be simplified (i.e.,
+	 *                     determinized and minimized)
+	 * 
 	 * @return the widened string
 	 */
 	public AutomatonString widen(AutomatonString other, boolean simplify) {
@@ -246,9 +250,11 @@ public class AutomatonString {
 	 * Performs the widening between this string and the given one.
 	 * 
 	 * @param other             the other string
-	 * @param wideningThreshold the threshold parameter of the widening operation
+	 * @param wideningThreshold the threshold parameter of the widening
+	 *                              operation
 	 * @param simplify          if true, the result will be simplified (i.e.,
-	 *                          determinized and minimized)
+	 *                              determinized and minimized)
+	 * 
 	 * @return the widened string
 	 */
 	public AutomatonString widen(AutomatonString other, int wideningThreshold, boolean simplify) {
@@ -264,10 +270,10 @@ public class AutomatonString {
 
 	/**
 	 * An interval representing the result of a computation on an
-	 * {@link AutomatonString}. The lower endpoint is <i>always</i> finite, while
-	 * the upper endpoint might not be finite. If it is not finite,
-	 * {@link #topIsInfinity()} will return {@code true}, and the value returned by
-	 * {@link #getUpper()} can be ignored.
+	 * {@link AutomatonString}. The lower endpoint is <i>always</i> finite,
+	 * while the upper endpoint might not be finite. If it is not finite,
+	 * {@link #topIsInfinity()} will return {@code true}, and the value returned
+	 * by {@link #getUpper()} can be ignored.
 	 * 
 	 * @author <a href="mailto:vincenzo.arceri@unive.it">Vincenzo Arceri</a>
 	 * @author <a href="mailto:luca.negrini@unive.it">Luca Negrini</a>
@@ -294,7 +300,8 @@ public class AutomatonString {
 		 * 
 		 * @param lower         the lower endpoint
 		 * @param upper         the upper endpoint
-		 * @param topIsInfinity true if and only if the upper endpoint is infinite
+		 * @param topIsInfinity true if and only if the upper endpoint is
+		 *                          infinite
 		 */
 		public Interval(int lower, int upper, boolean topIsInfinity) {
 			this.lower = lower;
@@ -312,9 +319,9 @@ public class AutomatonString {
 		}
 
 		/**
-		 * Yields the upper endpoint of this interval. Since the upper endpoint might
-		 * not be finite, always query {@link #topIsInfinity()} before this method to
-		 * know if the value returned by this method is useless.
+		 * Yields the upper endpoint of this interval. Since the upper endpoint
+		 * might not be finite, always query {@link #topIsInfinity()} before
+		 * this method to know if the value returned by this method is useless.
 		 * 
 		 * @return the upper endpoint
 		 */
@@ -323,9 +330,9 @@ public class AutomatonString {
 		}
 
 		/**
-		 * Yields {@code true} if and only if the upper endpoint of this interval is not
-		 * finite. If this method returns {@code true}, then the value returned by
-		 * {@link #getUpper()} is meaningless.
+		 * Yields {@code true} if and only if the upper endpoint of this
+		 * interval is not finite. If this method returns {@code true}, then the
+		 * value returned by {@link #getUpper()} is meaningless.
 		 * 
 		 * @return {@code true} if that condition holds
 		 */
@@ -370,9 +377,9 @@ public class AutomatonString {
 	/**
 	 * Yields an {@link Interval} containing all possible lengths of the strings
 	 * modeled by this automaton string. If there is at least a cycle in the
-	 * underlying automaton, or if such automaton accepts the top string at least on
-	 * one transition, then the upper endpoint of the returned interval will be
-	 * infinite.
+	 * underlying automaton, or if such automaton accepts the top string at
+	 * least on one transition, then the upper endpoint of the returned interval
+	 * will be infinite.
 	 * 
 	 * @return the length, as an interval
 	 */
@@ -385,6 +392,7 @@ public class AutomatonString {
 	 * Joins this string with the given one.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return the joined string
 	 */
 	public AutomatonString concat(AutomatonString other) {
@@ -392,12 +400,13 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Yields an automaton string modeling all possible substrings of this automaton
-	 * string, starting at {@code start} (inclusive) and ending at {@code end}
-	 * (exclusive).
+	 * Yields an automaton string modeling all possible substrings of this
+	 * automaton string, starting at {@code start} (inclusive) and ending at
+	 * {@code end} (exclusive).
 	 * 
 	 * @param start the start index of the substring
 	 * @param end   the end index of the substring
+	 * 
 	 * @return an automaton string modeling all possible substrings
 	 */
 	public AutomatonString substring(int start, int end) {
@@ -414,15 +423,16 @@ public class AutomatonString {
 
 	/**
 	 * Replaces all occurrences of {@code toReplace} into this string with
-	 * {@code str}. If {@code toReplace} is never contained into this string, then
-	 * this string is returned. If the automaton underlying this string has a cycle,
-	 * or if the the automaton underlying {@code toReplace} has either a cycle or a
-	 * transition accepting the top string, then this method returns an automaton
-	 * string recognizing the top string. Otherwise, the replaced automaton string
-	 * is returned.
+	 * {@code str}. If {@code toReplace} is never contained into this string,
+	 * then this string is returned. If the automaton underlying this string has
+	 * a cycle, or if the the automaton underlying {@code toReplace} has either
+	 * a cycle or a transition accepting the top string, then this method
+	 * returns an automaton string recognizing the top string. Otherwise, the
+	 * replaced automaton string is returned.
 	 * 
 	 * @param toReplace the string to replace
 	 * @param str       the string to use as replacement
+	 * 
 	 * @return the replaced string
 	 */
 	public AutomatonString replace(AutomatonString toReplace, AutomatonString str) {
@@ -437,11 +447,12 @@ public class AutomatonString {
 
 	/**
 	 * Yields {@code true} if this string is equal to the given one. Being equal
-	 * means that the two underlying automata are equal, that is, that the automaton
-	 * underlying this string is contained into the automaton underlying the other
-	 * string, and vice versa.
+	 * means that the two underlying automata are equal, that is, that the
+	 * automaton underlying this string is contained into the automaton
+	 * underlying the other string, and vice versa.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean isEqualTo(AutomatonString other) {
@@ -451,19 +462,21 @@ public class AutomatonString {
 	/**
 	 * Yields the {@link Interval} containing all possible indexes where
 	 * {@code string} first appears into this string. If {@code string} is not
-	 * contained into this string, then {@code [-1,-1]} is returned. Moreover, if
-	 * the automaton underlying this string has a cycle, or if the automaton
+	 * contained into this string, then {@code [-1,-1]} is returned. Moreover,
+	 * if the automaton underlying this string has a cycle, or if the automaton
 	 * underlying {@code string} has a cycle or has at least one transition
-	 * accepting the top string, then {@code [-1,infinity]} is returned. Otherwise,
-	 * an interval {@code [i,j]} is returned, where {@code i} is the smallest (and
-	 * {@code j} is the biggest} index such that there exist a concrete string
-	 * {@code s} modeled by this automaton string and a concrete string {@code ss}
-	 * modeled by {@code string} such that {@code s.indexOf(ss) == i} (and
-	 * {@code s.indexOf(ss) == j}, respectively).
+	 * accepting the top string, then {@code [-1,infinity]} is returned.
+	 * Otherwise, an interval {@code [i,j]} is returned, where {@code i} is the
+	 * smallest (and {@code j} is the biggest} index such that there exist a
+	 * concrete string {@code s} modeled by this automaton string and a concrete
+	 * string {@code ss} modeled by {@code string} such that
+	 * {@code s.indexOf(ss) == i} (and {@code s.indexOf(ss) == j},
+	 * respectively).
 	 * 
 	 * @param string the other string
+	 * 
 	 * @return an interval containing the indexes of the first occurrences of
-	 *         {@code string} into this string
+	 *             {@code string} into this string
 	 */
 	public Interval indexOf(AutomatonString string) {
 		if (!contains(string))
@@ -483,13 +496,13 @@ public class AutomatonString {
 	// ------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Yields {@code true} if and only if {@code other} is <b>surely</b> contained
-	 * into this string. This means that:
+	 * Yields {@code true} if and only if {@code other} is <b>surely</b>
+	 * contained into this string. This means that:
 	 * <ul>
 	 * <li>if both strings are finite (i.e., no loops or top transitions in the
 	 * underlying automata), every concrete string modeled by {@code other} is
-	 * contained into every concrete string modeled by this string, according to the
-	 * semantic of {@link String#contains(CharSequence)}</li>
+	 * contained into every concrete string modeled by this string, according to
+	 * the semantic of {@link String#contains(CharSequence)}</li>
 	 * <li>otherwise, if {@code other} has only one path, according to
 	 * {@link Automaton#hasOnlyOnePath()}, then the longest concrete string
 	 * recognized by {@code other} is contained into all paths of the automaton
@@ -498,6 +511,7 @@ public class AutomatonString {
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean contains(AutomatonString other) {
@@ -505,8 +519,8 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Yields {@code true} if and only if {@code other} is <b>surely</b> a prefix of
-	 * this string. This means that:
+	 * Yields {@code true} if and only if {@code other} is <b>surely</b> a
+	 * prefix of this string. This means that:
 	 * <ul>
 	 * <li>if both strings are finite (i.e., no loops or top transitions in the
 	 * underlying automata), every concrete string modeled by {@code other} is a
@@ -514,13 +528,14 @@ public class AutomatonString {
 	 * semantic of {@link String#startsWith(String)}</li>
 	 * <li>otherwise, if {@code other} has only one path, according to
 	 * {@link Automaton#hasOnlyOnePath()}, then the automaton recognizing the
-	 * longest concrete string recognized by {@code other} is equal to the automaton
-	 * recognizing all possible substrings of this automaton, from {@code 0} to the
-	 * length of the longest string</li>
+	 * longest concrete string recognized by {@code other} is equal to the
+	 * automaton recognizing all possible substrings of this automaton, from
+	 * {@code 0} to the length of the longest string</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean startsWith(AutomatonString other) {
@@ -528,19 +543,21 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Yields {@code true} if and only if {@code other} is <b>surely</b> a suffix of
-	 * this string. This means that:
+	 * Yields {@code true} if and only if {@code other} is <b>surely</b> a
+	 * suffix of this string. This means that:
 	 * <ul>
 	 * <li>if both strings are finite (i.e., no loops or top transitions in the
 	 * underlying automata), every concrete string modeled by {@code other} is a
 	 * suffix of every concrete string modeled by this string, according to the
 	 * semantic of {@link String#startsWith(String)}</li>
 	 * <li>otherwise, this string and {@code other} must satisfy the second
-	 * condition of {@link #startsWith(AutomatonString)} after being reversed</li>
+	 * condition of {@link #startsWith(AutomatonString)} after being
+	 * reversed</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean endsWith(AutomatonString other) {
@@ -595,19 +612,20 @@ public class AutomatonString {
 	// ------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Yields {@code true} if this string <b>might</b> be equal to the given one.
-	 * This means that:
+	 * Yields {@code true} if this string <b>might</b> be equal to the given
+	 * one. This means that:
 	 * <ul>
 	 * <li>if both strings are finite (i.e., no loops or top transitions in the
-	 * underlying automata), at least one concrete string modeled by {@code other}
-	 * is equal to at least one concrete string modeled by this string, according to
-	 * the semantic of {@link String#equals(Object)}</li>
-	 * <li>otherwise, the intersection between the automaton underlying this string
-	 * and the one underlying {@code other} must not be empty</li>
+	 * underlying automata), at least one concrete string modeled by
+	 * {@code other} is equal to at least one concrete string modeled by this
+	 * string, according to the semantic of {@link String#equals(Object)}</li>
+	 * <li>otherwise, the intersection between the automaton underlying this
+	 * string and the one underlying {@code other} must not be empty</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean mayBeEqualTo(AutomatonString other) {
@@ -617,20 +635,21 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Yields {@code true} if and only if {@code other} <b>might</b> be a suffix of
-	 * this string. This means that:
+	 * Yields {@code true} if and only if {@code other} <b>might</b> be a suffix
+	 * of this string. This means that:
 	 * <ul>
 	 * <li>if both strings are finite (i.e., no loops or top transitions in the
-	 * underlying automata), at least one concrete string modeled by {@code other}
-	 * is a suffix of at least one concrete string modeled by this string, according
-	 * to the semantic of {@link String#endsWith(String)}</li>
-	 * <li>otherwise, the intersection between the suffix automaton (according to
-	 * {@link Automata#suffix(Automaton)} of the automaton underlying this string
-	 * and the one underlying {@code other} must not be empty</li>
+	 * underlying automata), at least one concrete string modeled by
+	 * {@code other} is a suffix of at least one concrete string modeled by this
+	 * string, according to the semantic of {@link String#endsWith(String)}</li>
+	 * <li>otherwise, the intersection between the suffix automaton (according
+	 * to {@link Automata#suffix(Automaton)} of the automaton underlying this
+	 * string and the one underlying {@code other} must not be empty</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean mayEndWith(AutomatonString other) {
@@ -646,20 +665,22 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Yields {@code true} if and only if {@code other} <b>might</b> be contained in
-	 * this string. This means that:
+	 * Yields {@code true} if and only if {@code other} <b>might</b> be
+	 * contained in this string. This means that:
 	 * <ul>
 	 * <li>if both strings are finite (i.e., no loops or top transitions in the
-	 * underlying automata), at least one concrete string modeled by {@code other}
-	 * is contained into at least one concrete string modeled by this string,
-	 * according to the semantic of {@link String#contains(CharSequence)}</li>
-	 * <li>otherwise, the intersection between the factors automaton (according to
-	 * {@link Automata#factors(Automaton)} of the automaton underlying this string
-	 * and the one underlying {@code other} must not be empty</li>
+	 * underlying automata), at least one concrete string modeled by
+	 * {@code other} is contained into at least one concrete string modeled by
+	 * this string, according to the semantic of
+	 * {@link String#contains(CharSequence)}</li>
+	 * <li>otherwise, the intersection between the factors automaton (according
+	 * to {@link Automata#factors(Automaton)} of the automaton underlying this
+	 * string and the one underlying {@code other} must not be empty</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean mayContain(AutomatonString other) {
@@ -667,20 +688,22 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Yields {@code true} if and only if {@code other} <b>might</b> be a prefix of
-	 * this string. This means that:
+	 * Yields {@code true} if and only if {@code other} <b>might</b> be a prefix
+	 * of this string. This means that:
 	 * <ul>
 	 * <li>if both strings are finite (i.e., no loops or top transitions in the
-	 * underlying automata), at least one concrete string modeled by {@code other}
-	 * is a prefix of at least one concrete string modeled by this string, according
-	 * to the semantic of {@link String#startsWith(String)}</li>
-	 * <li>otherwise, the intersection between the prefix automaton (according to
-	 * {@link Automata#prefix(Automaton)} of the automaton underlying this string
-	 * and the one underlying {@code other} must not be empty</li>
+	 * underlying automata), at least one concrete string modeled by
+	 * {@code other} is a prefix of at least one concrete string modeled by this
+	 * string, according to the semantic of
+	 * {@link String#startsWith(String)}</li>
+	 * <li>otherwise, the intersection between the prefix automaton (according
+	 * to {@link Automata#prefix(Automaton)} of the automaton underlying this
+	 * string and the one underlying {@code other} must not be empty</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
 	 * @param other the other string
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean mayStartWith(AutomatonString other) {

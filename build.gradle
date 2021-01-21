@@ -11,9 +11,12 @@ buildscript {
 
 plugins {
     id 'java-library'
-    id 'com.github.roroche.plantuml' version '1.0.2'
     id 'eclipse'
     id 'org.ajoberstar.grgit' version '4.0.2'
+    id "com.diffplug.spotless" version "5.8.2"
+    id 'checkstyle'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group = 'it.unive'
@@ -39,7 +42,7 @@ plugins.withType(JavaPlugin) {
 	    	 attributes(
 	            'Implementation-Title': rootProject.name,
 	            'Implementation-Version': project.version,
-	            'Implementation-Vendor': 'Cà Foscari University of Venice',
+	            'Implementation-Vendor': 'Ca\' Foscari University of Venice',
 	            'Created-By': "Gradle ${gradle.gradleVersion}",
 	            'Build-Revision': repo.head().abbreviatedId,
 	            'Build-Tag': repo.describe(tags: true, always: true),
@@ -53,17 +56,16 @@ plugins.withType(JavaPlugin) {
     }
 }
 
-classDiagram { 
-    packageName = "it.unive.tarsis"
-    outputFile = new File("${projectDir}/diagrams/class_diagram.plantuml")
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
-buildClassDiagram {
-	doFirst {
-        mkdir new File("${projectDir}/diagrams/")
-	}
+javadoc {
+	if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
 }
 
-build {
-	dependsOn 'buildClassDiagram', 'javadoc'
-}
+apply from: 'publishing.gradle'
+apply from: 'code-style.gradle'

@@ -1,11 +1,10 @@
 package it.unive.tarsis.regex;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.strings.ExtString;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A regular expression representing the empty set of strings.
@@ -14,15 +13,15 @@ import it.unive.tarsis.strings.ExtString;
  * @author <a href="mailto:luca.negrini@unive.it">Luca Negrini</a>
  */
 public class EmptySet extends RegularExpression {
-	
+
 	/**
-	 * The singleton instance
+	 * The singleton instance.
 	 */
 	public static final EmptySet INSTANCE = new EmptySet();
 
 	private EmptySet() {
 	}
-	
+
 	@Override
 	public RegularExpression simplify() {
 		return new EmptySet();
@@ -47,29 +46,29 @@ public class EmptySet extends RegularExpression {
 	public Automaton toAutomaton() {
 		return Automata.mkEmptyLanguage();
 	}
-	
+
 	@Override
 	protected Set<PartialSubstring> substringAux(int charsToSkip, int missingChars) {
 		Set<PartialSubstring> result = new HashSet<>();
 		result.add(new PartialSubstring(ExtString.mkEmptyString(), charsToSkip, missingChars - charsToSkip));
 		return result;
 	}
-	
+
 	@Override
 	public boolean isEmpty() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean is(String str) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
 	public int maxLength() {
 		return 0;
 	}
-	
+
 	@Override
 	public int minLength() {
 		return 0;
@@ -79,7 +78,7 @@ public class EmptySet extends RegularExpression {
 	public boolean mayContain(String s) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean contains(String s) {
 		return false;
@@ -109,17 +108,17 @@ public class EmptySet extends RegularExpression {
 	protected RegularExpression unrollStarToFixedLength(int length) {
 		return this;
 	}
-	
+
 	@Override
 	protected RegularExpression reverse() {
 		return this;
 	}
-	
+
 	@Override
 	protected RegularExpression topAsEmptyString() {
 		return this;
 	}
-	
+
 	@Override
 	protected RegularExpression topAsSingleChar() {
 		return this;

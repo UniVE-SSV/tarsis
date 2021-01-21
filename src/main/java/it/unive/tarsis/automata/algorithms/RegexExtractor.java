@@ -1,10 +1,5 @@
 package it.unive.tarsis.automata.algorithms;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
@@ -15,6 +10,10 @@ import it.unive.tarsis.regex.EmptySet;
 import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.Star;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An algorithm that extract regular expressions from automata.
@@ -28,6 +27,7 @@ public class RegexExtractor {
 	 * Yields the minimal regular expression equivalent to the given automaton.
 	 * 
 	 * @param a the automaton
+	 * 
 	 * @return the equivalent regular expression
 	 */
 	public static RegularExpression getMinimalRegex(Automaton a) {
@@ -39,6 +39,7 @@ public class RegexExtractor {
 	 * automaton by extracting one from each path of the automaton.
 	 * 
 	 * @param a the automaton
+	 * 
 	 * @return the set of regular expressions
 	 */
 	public static Set<RegularExpression> getRegexesFromPaths(Automaton a) {
@@ -233,6 +234,7 @@ public class RegexExtractor {
 	 * simplified through heuristics until a fixpoint is reached.
 	 * 
 	 * @param a the automaton
+	 * 
 	 * @return the equivalent regular expression
 	 */
 	public static RegularExpression getMinimalBrzozowskiRegex(Automaton a) {

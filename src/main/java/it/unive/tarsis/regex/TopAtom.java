@@ -1,11 +1,10 @@
 package it.unive.tarsis.regex;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.strings.ExtString;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A regular expression representing a sequence of unknown characters of
@@ -17,12 +16,12 @@ import it.unive.tarsis.strings.ExtString;
 public class TopAtom extends Atom {
 
 	/**
-	 * The string used to represent this regular expression
+	 * The string used to represent this regular expression.
 	 */
 	public static final String STRING = "\u0372";
 
 	/**
-	 * The singleton instance
+	 * The singleton instance.
 	 */
 	public static final TopAtom INSTANCE = new TopAtom();
 
@@ -46,7 +45,8 @@ public class TopAtom extends Atom {
 
 		result.add(new PartialSubstring(ExtString.mkEmptyString(), charsToSkip, missingChars - charsToSkip));
 		for (int i = 1; i <= missingChars - charsToSkip; i++)
-			result.add(new PartialSubstring(ExtString.mkTopString(i), i > charsToSkip ? 0 : charsToSkip - i, missingChars - charsToSkip - i));
+			result.add(new PartialSubstring(ExtString.mkTopString(i), i > charsToSkip ? 0 : charsToSkip - i,
+					missingChars - charsToSkip - i));
 
 		return result;
 	}

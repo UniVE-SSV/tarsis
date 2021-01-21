@@ -2,18 +2,17 @@ package it.unive.tarsis.automata.algorithms;
 
 import static it.unive.tarsis.automata.Automata.explode;
 
+import it.unive.tarsis.automata.Automata;
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.automata.State;
+import it.unive.tarsis.automata.Transition;
+import it.unive.tarsis.regex.Atom;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
-
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.automata.State;
-import it.unive.tarsis.automata.Transition;
-import it.unive.tarsis.regex.Atom;
 
 /**
  * An algorithm that replaces strings across all paths of an automaton.
@@ -46,15 +45,16 @@ public class StringReplacer {
 	}
 
 	/**
-	 * Yields a new automaton where every occurrence of {@code toReplace} have been
-	 * replaced with {@code str}. If {@code must} is {@code true}, then this method
-	 * effectively replaces {@code toReplace}. Otherwise, a may-replacement is
-	 * perfomed, meaning that {@code toReplaced} is replaced with
-	 * {@code toReplace || str}.
+	 * Yields a new automaton where every occurrence of {@code toReplace} have
+	 * been replaced with {@code str}. If {@code must} is {@code true}, then
+	 * this method effectively replaces {@code toReplace}. Otherwise, a
+	 * may-replacement is perfomed, meaning that {@code toReplaced} is replaced
+	 * with {@code toReplace || str}.
 	 * 
 	 * @param toReplace the string to replace
 	 * @param str       the automaton to use as a replacement
 	 * @param must      whether or not a must-replacement has to be made
+	 * 
 	 * @return the replaced automaton
 	 */
 	public Automaton replace(String toReplace, Automaton str, boolean must) {

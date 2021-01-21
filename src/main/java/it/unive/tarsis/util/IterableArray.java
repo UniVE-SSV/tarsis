@@ -5,10 +5,10 @@ import java.util.Iterator;
 /**
  * An iterable over an array of elements.
  * 
- * @param <E> the element type of the underlying array
- * 
  * @author <a href="mailto:vincenzo.arceri@unive.it">Vincenzo Arceri</a>
  * @author <a href="mailto:luca.negrini@unive.it">Luca Negrini</a>
+ * 
+ * @param <E> the element type of the underlying array
  */
 public class IterableArray<E> implements Iterable<E> {
 

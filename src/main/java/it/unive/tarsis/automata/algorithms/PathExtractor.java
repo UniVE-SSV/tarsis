@@ -1,5 +1,8 @@
 package it.unive.tarsis.automata.algorithms;
 
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.automata.State;
+import it.unive.tarsis.automata.Transition;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
@@ -11,12 +14,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-
 import org.apache.commons.lang3.tuple.Pair;
-
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.automata.State;
-import it.unive.tarsis.automata.Transition;
 
 /**
  * An algorithm that extracts paths from an automaton.
@@ -41,9 +39,9 @@ public class PathExtractor {
 	}
 
 	/**
-	 * Yields all possible paths going from an initial state to a final state in the
-	 * target automaton. Note that each node of an SCC of the automaton will appear
-	 * at most once in each path.
+	 * Yields all possible paths going from an initial state to a final state in
+	 * the target automaton. Note that each node of an SCC of the automaton will
+	 * appear at most once in each path.
 	 * 
 	 * @return the set of all possible paths
 	 */
@@ -72,28 +70,27 @@ public class PathExtractor {
 	private void depthFirst(State src, Set<List<Transition>> paths) {
 		Stack<Pair<State, Deque<Transition>>> ws = new Stack<>();
 		ws.push(Pair.of(src, new ConcurrentLinkedDeque<>()));
-		
+
 		do {
 			Pair<State, Deque<Transition>> current = ws.pop();
 			State node = current.getLeft();
 			Deque<Transition> visited = current.getRight();
-			
+
 			Set<Transition> tr = automaton.getOutgoingTransitionsFrom(node);
-			
-			transitions:
-			for (Transition t : tr) {
+
+			transitions: for (Transition t : tr) {
 				int count = 0;
-				for (Transition in : visited) 
+				for (Transition in : visited)
 					if (in.equals(t) && ++count > 1)
 						continue transitions;
 
 				visited.add(t);
 
-				if (t.getTo().isFinalState()) 
+				if (t.getTo().isFinalState())
 					paths.add(new LinkedList<>(visited));
 				ws.push(Pair.of(t.getTo(), new LinkedList<>(visited)));
 
-				visited.removeLast();				
+				visited.removeLast();
 			}
 		} while (!ws.isEmpty());
 	}
@@ -104,6 +101,7 @@ public class PathExtractor {
 	 * 
 	 * @param src    the source node
 	 * @param target the destination node
+	 * 
 	 * @return the minimum path
 	 */
 	public List<State> minimumDijkstra(State src, State target) {

@@ -1,11 +1,10 @@
 package it.unive.tarsis.regex;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.strings.ExtString;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A regular expression representing a single string.
@@ -57,10 +56,12 @@ public class Atom extends RegularExpression {
 
 		if (charsToSkip > string.length())
 			// outside of the string
-			result.add(new PartialSubstring(ExtString.mkEmptyString(), charsToSkip - string.length(), missingChars - charsToSkip));
+			result.add(new PartialSubstring(ExtString.mkEmptyString(), charsToSkip - string.length(),
+					missingChars - charsToSkip));
 		else if (missingChars > string.length())
 			// partially inside the string
-			result.add(new PartialSubstring(ExtString.mkString(string.substring(charsToSkip)), 0, missingChars - string.length()));
+			result.add(new PartialSubstring(ExtString.mkString(string.substring(charsToSkip)), 0,
+					missingChars - string.length()));
 		else
 			result.add(new PartialSubstring(ExtString.mkString(string.substring(charsToSkip, missingChars)), 0, 0));
 

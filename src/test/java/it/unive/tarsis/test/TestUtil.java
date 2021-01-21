@@ -1,21 +1,18 @@
 package it.unive.tarsis.test;
 
-import static it.unive.tarsis.test.TestUtil.randomChar;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
 import it.unive.tarsis.regex.Atom;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class TestUtil {
 	private static final Random random = new Random();
-	
+
 	public static Automaton build(State... states) {
 		Set<State> ss = new HashSet<>();
 		for (State q : states)
@@ -31,7 +28,7 @@ public class TestUtil {
 		a.recomputeOutgoingAdjacencyList();
 		return a;
 	}
-	
+
 	public static Atom randomChar(int count) {
 		String ALPHA_NUMERIC_STRING = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 		StringBuilder builder = new StringBuilder();
@@ -42,20 +39,21 @@ public class TestUtil {
 
 		return new Atom(builder.toString());
 	}
-	
-	public static Automaton generateAutomaton(Set<State> states, Map<Integer, State> mapping, int numberOfTransitionsForEachState, int charLen) {
+
+	public static Automaton generateAutomaton(Set<State> states, Map<Integer, State> mapping,
+			int numberOfTransitionsForEachState, int charLen) {
 		Automaton a = null;
-		
+
 		do {
 			Set<Transition> delta = new HashSet<>();
-	
-			for (State s : states) 
-				for (int i = 0;	i < numberOfTransitionsForEachState; i++) 
+
+			for (State s : states)
+				for (int i = 0; i < numberOfTransitionsForEachState; i++)
 					delta.add(new Transition(s, mapping.get(random.nextInt(states.size())), randomChar(charLen)));
-	
-				a = new Automaton(delta, states);
+
+			a = new Automaton(delta, states);
 		} while (Automata.isEmptyLanguageAccepted(a));
-		
+
 		return a;
 	}
 }

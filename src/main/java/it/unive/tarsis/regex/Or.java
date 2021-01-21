@@ -1,10 +1,9 @@
 package it.unive.tarsis.regex;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A regular expression representing an or between two other regular
@@ -37,7 +36,7 @@ public class Or extends RegularExpression {
 	}
 
 	/**
-	 * Yields the second regular expression
+	 * Yields the second regular expression.
 	 * 
 	 * @return the second regular expression
 	 */
@@ -46,7 +45,7 @@ public class Or extends RegularExpression {
 	}
 
 	/**
-	 * Yields the first regular expression
+	 * Yields the first regular expression.
 	 * 
 	 * @return the first regular expression
 	 */
@@ -60,7 +59,8 @@ public class Or extends RegularExpression {
 	}
 
 	/**
-	 * Yields {@code true} if and only if both inner regular expressions are atoms.
+	 * Yields {@code true} if and only if both inner regular expressions are
+	 * atoms.
 	 * 
 	 * @return {@code true} if that condition holds
 	 */

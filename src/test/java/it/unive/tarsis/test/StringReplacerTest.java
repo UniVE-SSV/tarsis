@@ -2,14 +2,12 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertEquals;
 
+import it.unive.tarsis.automata.Automata;
+import it.unive.tarsis.automata.Automaton;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-
 import org.junit.Test;
-
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
 
 public class StringReplacerTest {
 

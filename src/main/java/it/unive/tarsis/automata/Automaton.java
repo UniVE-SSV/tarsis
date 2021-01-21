@@ -3,17 +3,16 @@ package it.unive.tarsis.automata;
 import static it.unive.tarsis.automata.Automata.isContained;
 import static it.unive.tarsis.automata.Automata.minimize;
 
+import it.unive.tarsis.automata.algorithms.PathExtractor;
+import it.unive.tarsis.automata.algorithms.RegexExtractor;
+import it.unive.tarsis.regex.RegularExpression;
+import it.unive.tarsis.regex.TopAtom;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import it.unive.tarsis.automata.algorithms.PathExtractor;
-import it.unive.tarsis.automata.algorithms.RegexExtractor;
-import it.unive.tarsis.regex.RegularExpression;
-import it.unive.tarsis.regex.TopAtom;
 
 /**
  * An automaton, represented as a set of states and a set of transitions.
@@ -70,8 +69,8 @@ public class Automaton {
 	}
 
 	/**
-	 * Yields the path extractor tied to this automaton, that can extract paths from
-	 * it.
+	 * Yields the path extractor tied to this automaton, that can extract paths
+	 * from it.
 	 * 
 	 * @return the path extractor
 	 */
@@ -95,10 +94,10 @@ public class Automaton {
 	}
 
 	/**
-	 * Yields true if and only if this automaton is deterministic, that is, if the
-	 * transition relation is a function. This is computed by detecting if none of
-	 * the states of this automaton has two outgoing transitions recognizing the
-	 * same symbol but going to different states.
+	 * Yields true if and only if this automaton is deterministic, that is, if
+	 * the transition relation is a function. This is computed by detecting if
+	 * none of the states of this automaton has two outgoing transitions
+	 * recognizing the same symbol but going to different states.
 	 * 
 	 * @return {@code true} if and only if that condition holds
 	 */
@@ -129,15 +128,16 @@ public class Automaton {
 	}
 
 	/**
-	 * Yields true if and only if the two given states are mutually reachable, that
-	 * is, if there exist a path going from {@code s1} to {@code s2} and one going
-	 * from {@code s2} to {@code s1}. Paths are searched through the Dijkstra
-	 * algorithm.
+	 * Yields true if and only if the two given states are mutually reachable,
+	 * that is, if there exist a path going from {@code s1} to {@code s2} and
+	 * one going from {@code s2} to {@code s1}. Paths are searched through the
+	 * Dijkstra algorithm.
 	 * 
 	 * @param s1 the first state
 	 * @param s2 the second state
-	 * @return {@code true} if and only if {@code s1} and {@code s2} are mutually
-	 *         reachable
+	 * 
+	 * @return {@code true} if and only if {@code s1} and {@code s2} are
+	 *             mutually reachable
 	 */
 	public boolean areMutuallyReachable(State s1, State s2) {
 		return !pathExtractor.minimumDijkstra(s1, s2).isEmpty() && !pathExtractor.minimumDijkstra(s2, s1).isEmpty();
@@ -147,6 +147,7 @@ public class Automaton {
 	 * Yields the set of all outgoing transitions from the given state.
 	 * 
 	 * @param s the state
+	 * 
 	 * @return the set of outgoing transitions
 	 */
 	public Set<Transition> getOutgoingTransitionsFrom(State s) {
@@ -157,6 +158,7 @@ public class Automaton {
 	 * Yields the set of all ingoing transitions to the given state.
 	 * 
 	 * @param s the state
+	 * 
 	 * @return the set of ingoing transitions
 	 */
 	public Set<Transition> getIngoingTransitionsFrom(State s) {
@@ -174,6 +176,7 @@ public class Automaton {
 	 * given set of states.
 	 * 
 	 * @param states the set of states
+	 * 
 	 * @return the set of regular expression that can be read
 	 */
 	public Set<RegularExpression> readableSymbolsFromStates(Set<State> states) {
@@ -221,6 +224,7 @@ public class Automaton {
 	 * 
 	 * @param s1 the source state
 	 * @param s2 the destination state
+	 * 
 	 * @return the set of transitions connecting the two states
 	 */
 	public Set<Transition> getAllTransitionsConnecting(State s1, State s2) {
@@ -254,8 +258,8 @@ public class Automaton {
 	}
 
 	/**
-	 * Yields one of the initial states of this automaton. If this automaton does
-	 * not have an initial state, this method returns {@code null}.
+	 * Yields one of the initial states of this automaton. If this automaton
+	 * does not have an initial state, this method returns {@code null}.
 	 * 
 	 * @return one of the initial states, or {@code null}
 	 */
@@ -292,7 +296,8 @@ public class Automaton {
 	}
 
 	/**
-	 * Yields a textual representation of the adjacency matrix of this automaton.
+	 * Yields a textual representation of the adjacency matrix of this
+	 * automaton.
 	 * 
 	 * @return a string containing a textual representation of the automaton
 	 */
@@ -340,9 +345,10 @@ public class Automaton {
 
 	/**
 	 * Yields the language recognized by this automaton, that is, the set of all
-	 * strings recognized by this automaton. In this context, a regular expression
-	 * representing the top string is treated as a one-character string containing
-	 * only the top character stored in {@link TopAtom#STRING}.
+	 * strings recognized by this automaton. In this context, a regular
+	 * expression representing the top string is treated as a one-character
+	 * string containing only the top character stored in
+	 * {@link TopAtom#STRING}.
 	 * 
 	 * @return the language recognized by this automaton
 	 */
@@ -367,7 +373,7 @@ public class Automaton {
 	/**
 	 * Equal operator between automata, implemented as:<br>
 	 * {@code language(A).equals(language(B))} if both automata are loop free,
-	 * {@code A.contains(B) && B.contains(A)} otherwise <br>
+	 * {@code A.contains(B) && B.contains(A)} otherwise.<br>
 	 * <br>
 	 * {@inheritDoc}
 	 */
@@ -407,8 +413,8 @@ public class Automaton {
 	}
 
 	/**
-	 * Yields the length of the longest string recognized by this automaton, with
-	 * {@link Integer#MAX_VALUE} representing infinity.
+	 * Yields the length of the longest string recognized by this automaton,
+	 * with {@link Integer#MAX_VALUE} representing infinity.
 	 * 
 	 * @return the length of the longest string
 	 */
@@ -510,6 +516,7 @@ public class Automaton {
 	 * Yields the set of possible successors of the given node.
 	 * 
 	 * @param node the node
+	 * 
 	 * @return the set of possible successors
 	 */
 	public Set<State> getNextStates(State node) {
@@ -530,9 +537,9 @@ public class Automaton {
 	}
 
 	/**
-	 * Builds a new transition going from {@code from} to {@code to} and recognizing
-	 * {@code input} and adds it to the set of transitions of this automaton,
-	 * <b>without recomputing the outgoing adjacency list</b>.
+	 * Builds a new transition going from {@code from} to {@code to} and
+	 * recognizing {@code input} and adds it to the set of transitions of this
+	 * automaton, <b>without recomputing the outgoing adjacency list</b>.
 	 * 
 	 * @param from  the source node
 	 * @param to    the destination node
@@ -553,8 +560,8 @@ public class Automaton {
 	}
 
 	/**
-	 * Removes every transition in the given set from the ones of this automaton,
-	 * <b>without recomputing the outgoing adjacency list</b>.
+	 * Removes every transition in the given set from the ones of this
+	 * automaton, <b>without recomputing the outgoing adjacency list</b>.
 	 * 
 	 * @param ts the set of transitions to remove
 	 */
@@ -573,8 +580,8 @@ public class Automaton {
 	}
 
 	/**
-	 * Yields {@code true} if and only if there is at least one transition in this
-	 * automaton that recognizes a top string.
+	 * Yields {@code true} if and only if there is at least one transition in
+	 * this automaton that recognizes a top string.
 	 * 
 	 * @return {@code true} if that condition holds
 	 */
@@ -589,10 +596,10 @@ public class Automaton {
 
 	/**
 	 * Yields {@code true} if and only if this automaton has only one path. The
-	 * general idea is that, after minimization, if the automaton has only one path
-	 * then the each state is the starting point of a transition at most once, and
-	 * it is the destingation node of a transition at most once. Note that this
-	 * method assumes that this automaton is loop-free.
+	 * general idea is that, after minimization, if the automaton has only one
+	 * path then the each state is the starting point of a transition at most
+	 * once, and it is the destingation node of a transition at most once. Note
+	 * that this method assumes that this automaton is loop-free.
 	 * 
 	 * @return {@code true} if that condition holds
 	 */

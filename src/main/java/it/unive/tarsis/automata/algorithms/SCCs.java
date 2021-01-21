@@ -1,14 +1,13 @@
 package it.unive.tarsis.automata.algorithms;
 
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.automata.State;
+import it.unive.tarsis.automata.Transition;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.automata.State;
-import it.unive.tarsis.automata.Transition;
 
 /**
  * The SCCs of an automaton, represented as a set of sets of states.
@@ -24,6 +23,7 @@ public class SCCs extends HashSet<Set<State>> {
 	 * Yields the SCCs of the given automaton.
 	 * 
 	 * @param a the automaton
+	 * 
 	 * @return the SCCs
 	 */
 	public static SCCs getSCCs(Automaton a) {
@@ -42,7 +42,7 @@ public class SCCs extends HashSet<Set<State>> {
 		SCCs partialResult = new SCCs();
 		SCCs result = new SCCs();
 
-		for (State v : a.getStates()) 
+		for (State v : a.getStates())
 			if (!indexes.containsKey(v)) {
 				partialResult.clear();
 				strongConnect(a, v, indexes, lowlink, onStack, stack, index, partialResult);
@@ -71,7 +71,7 @@ public class SCCs extends HashSet<Set<State>> {
 		SCCs realResult = new SCCs();
 		result.removeAll(toRemove);
 
-		for (Set<State> scc : result) 
+		for (Set<State> scc : result)
 			for (State s1 : scc) {
 				Set<State> ns = new HashSet<>(scc);
 				for (State s2 : a.getStates())
@@ -106,10 +106,12 @@ public class SCCs extends HashSet<Set<State>> {
 				lowlink.put(v, Math.min(lowlink.get(v), lowlink.get(w)));
 			} else if (onStack.contains(w)) {
 				// Successor w is in stack S and hence in the current SCC
-				// If w is not on stack, then (v, w) is a cross-edge in the DFS tree and must be
+				// If w is not on stack, then (v, w) is a cross-edge in the DFS
+				// tree and must be
 				// ignored
 				// Note: The next line may look odd - but is correct.
-				// It says w.index not w.lowlink; that is deliberate and from the original paper
+				// It says w.index not w.lowlink; that is deliberate and from
+				// the original paper
 				lowlink.put(v, Math.min(lowlink.get(v), indexes.get(w)));
 			}
 		}

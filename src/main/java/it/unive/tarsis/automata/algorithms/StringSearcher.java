@@ -1,14 +1,13 @@
 package it.unive.tarsis.automata.algorithms;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * An algorithm that searches strings across all paths of an automaton.
@@ -47,18 +46,19 @@ public class StringSearcher {
 	}
 
 	/**
-	 * Yields a set containing all the sequences of transitions that recognize the
-	 * given string.
+	 * Yields a set containing all the sequences of transitions that recognize
+	 * the given string.
 	 * 
 	 * @param toSearch the string to search
+	 * 
 	 * @return the set of sequences of transitions
 	 */
 	public Set<Vector<Transition>> searchInAllPaths(String toSearch) {
 		Set<Vector<Transition>> collected = new HashSet<>();
 
 		Set<List<State>> paths = automaton.getPathExtractor().getAllPaths();
-				
-		if (paths.size() == 0) 
+
+		if (paths.size() == 0)
 			return collected;
 
 		for (List<State> v : paths)
@@ -83,10 +83,10 @@ public class StringSearcher {
 
 			if (transitions.size() == 0)
 				continue;
-			
+
 			for (Transition t : transitions) {
 				if (matching)
-					if (t.getInput().is(searchString.substring(0, 1)) )
+					if (t.getInput().is(searchString.substring(0, 1)))
 						// we found a matching char
 						advanceSearch(path, t);
 					else {
@@ -103,7 +103,7 @@ public class StringSearcher {
 				collected.add((Vector<Transition>) path.clone());
 				resetSearchState(path, toSearch);
 			}
-			
+
 		}
 
 		return collected;

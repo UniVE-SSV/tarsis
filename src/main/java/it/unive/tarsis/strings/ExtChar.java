@@ -15,7 +15,7 @@ public class ExtChar {
 	private final char ch;
 
 	/**
-	 * Builds the extended character
+	 * Builds the extended character.
 	 * 
 	 * @param ch the underlying character
 	 */
@@ -33,9 +33,11 @@ public class ExtChar {
 	}
 
 	/**
-	 * Yields {@code true} if and only if this extended character represent the given one.
+	 * Yields {@code true} if and only if this extended character represent the
+	 * given one.
 	 * 
 	 * @param ch the character
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean is(char ch) {

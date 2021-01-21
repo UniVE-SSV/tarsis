@@ -1,15 +1,13 @@
 package it.unive.tarsis.strings;
 
+import it.unive.tarsis.util.IterableArray;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
-
-import it.unive.tarsis.util.IterableArray;
 
 /**
  * An extended string, that is, a string composed of an array of
@@ -38,6 +36,7 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	 * Builds a new extend string composed of {@code length} unknown characters.
 	 * 
 	 * @param length the desired length of the string
+	 * 
 	 * @return the extended string
 	 */
 	public static ExtString mkTopString(int length) {
@@ -49,24 +48,26 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	}
 
 	/**
-	 * Builds a set of plain strings from a given set of extended strings
+	 * Builds a set of plain strings from a given set of extended strings.
 	 * 
 	 * @param extStrings the extended strings
+	 * 
 	 * @return the strings set
 	 */
 	public static Set<String> toStrings(Iterable<ExtString> extStrings) {
 		Set<String> result = new HashSet<String>();
-		
+
 		for (ExtString e : extStrings)
 			result.add(e.toString());
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Builds a new extend string corresponding to the given string.
 	 * 
 	 * @param str the string
+	 * 
 	 * @return the extended string
 	 */
 	public static ExtString mkString(String str) {
@@ -81,6 +82,7 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	 * Builds an array of extend strings corresponding to the given ones.
 	 * 
 	 * @param strings the strings
+	 * 
 	 * @return the extended strings
 	 */
 	public static ExtString[] mkStrings(String... strings) {
@@ -95,6 +97,7 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	 * Builds a new extend string corresponding to the given character.
 	 * 
 	 * @param ch the character
+	 * 
 	 * @return the extended string
 	 */
 	public static ExtString mkStringFromChar(char ch) {
@@ -151,6 +154,7 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	 * Joins together two extended strings.
 	 * 
 	 * @param str the other extended string
+	 * 
 	 * @return the concatenation
 	 */
 	public ExtString concat(ExtString str) {
@@ -167,8 +171,8 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	}
 
 	/**
-	 * Yields a new extended string where all subsequent occurrences of the unknown
-	 * character have been collapsed into a single one.
+	 * Yields a new extended string where all subsequent occurrences of the
+	 * unknown character have been collapsed into a single one.
 	 * 
 	 * @return the extended string
 	 */
@@ -213,10 +217,11 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	}
 
 	/**
-	 * Yields {@code true} if and only if this extended string starts with the given
-	 * prefix.
+	 * Yields {@code true} if and only if this extended string starts with the
+	 * given prefix.
 	 * 
 	 * @param prefix the prefix
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean startsWith(String prefix) {
@@ -224,10 +229,11 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	}
 
 	/**
-	 * Yields {@code true} if and only if this extended string ends with the given
-	 * suffix.
+	 * Yields {@code true} if and only if this extended string ends with the
+	 * given suffix.
 	 * 
 	 * @param suffix the suffix
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean endsWith(String suffix) {
@@ -261,10 +267,11 @@ public final class ExtString implements Comparable<ExtString>, Iterable<ExtChar>
 	}
 
 	/**
-	 * Yields {@code true} if and only if this extended string contains the given
-	 * sequence.
+	 * Yields {@code true} if and only if this extended string contains the
+	 * given sequence.
 	 * 
 	 * @param s the sequence
+	 * 
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean contains(CharSequence s) {

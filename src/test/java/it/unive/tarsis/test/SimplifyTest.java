@@ -2,15 +2,14 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import it.unive.tarsis.regex.Atom;
 import it.unive.tarsis.regex.Comp;
 import it.unive.tarsis.regex.EmptySet;
 import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.Star;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class SimplifyTest {
 

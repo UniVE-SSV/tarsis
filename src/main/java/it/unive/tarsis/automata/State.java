@@ -27,7 +27,8 @@ public class State {
 	 * Builds a new state.
 	 * 
 	 * @param state          the name of the state
-	 * @param isInitialState true if and only if this state is an accepting state
+	 * @param isInitialState true if and only if this state is an accepting
+	 *                           state
 	 * @param isFinalState   true if and only if this state is an initial state
 	 */
 	public State(String state, boolean isInitialState, boolean isFinalState) {
@@ -46,11 +47,11 @@ public class State {
 	}
 
 	/**
-	 * Updates the property of this state of being an initial state according to the
-	 * given boolean.
+	 * Updates the property of this state of being an initial state according to
+	 * the given boolean.
 	 * 
-	 * @param isInitialState whether or not this state has to be marked as initial
-	 *                       state
+	 * @param isInitialState whether or not this state has to be marked as
+	 *                           initial state
 	 */
 	public void setInitialState(boolean isInitialState) {
 		this.isInitialState = isInitialState;
@@ -84,10 +85,11 @@ public class State {
 	}
 
 	/**
-	 * Updates the property of this state of being a final state according to the
-	 * given boolean.
+	 * Updates the property of this state of being a final state according to
+	 * the given boolean.
 	 * 
-	 * @param isFinalState whether or not this state has to be marked as final state
+	 * @param isFinalState whether or not this state has to be marked as final
+	 *                         state
 	 */
 	public void setFinalState(boolean isFinalState) {
 		this.isFinalState = isFinalState;

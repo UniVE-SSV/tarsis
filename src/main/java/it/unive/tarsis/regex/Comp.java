@@ -1,11 +1,10 @@
 package it.unive.tarsis.regex;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.strings.ExtString;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A regular expression representing the sequential composition of two regular
@@ -38,7 +37,7 @@ public class Comp extends RegularExpression {
 	}
 
 	/**
-	 * Yields the first regular expression
+	 * Yields the first regular expression.
 	 * 
 	 * @return the first regular expression
 	 */
@@ -47,7 +46,7 @@ public class Comp extends RegularExpression {
 	}
 
 	/**
-	 * Yields the second regular expression
+	 * Yields the second regular expression.
 	 * 
 	 * @return the second regular expression
 	 */
