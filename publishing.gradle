@@ -42,9 +42,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/UniVE-SSV/lisa.git'
-                    developerConnection = 'scm:git:ssh://github.com/UniVE-SSV/lisa.git'
-                    url = 'https://github.com/UniVE-SSV/lisa'
+                    connection = 'scm:git:git://github.com/UniVE-SSV/tarsis.git'
+                    developerConnection = 'scm:git:ssh://github.com/UniVE-SSV/tarsis.git'
+                    url = 'https://github.com/UniVE-SSV/tarsis'
                 }
             }
         }
@@ -60,7 +60,7 @@ publishing {
         }
         maven {
 		    name = "GitHubPackages"
-		    url = "https://maven.pkg.github.com/UniVE-SSV/lisa"
+		    url = "https://maven.pkg.github.com/UniVE-SSV/tarsis"
 		    credentials {
 		      	username = System.getenv("GITHUB_ACTOR")
 		      	password = System.getenv("GITHUB_TOKEN")
@@ -70,7 +70,7 @@ publishing {
 }
 
 signing {
-	def signingKey = System.getenv("SIGN_KEY")
+    def signingKey = System.getenv("SIGN_KEY")
     def signingPassword = System.getenv("SIGN_PW")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
