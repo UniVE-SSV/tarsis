@@ -1,8 +1,5 @@
 package it.unive.tarsis.automata.algorithms;
 
-import static it.unive.tarsis.automata.Automata.explode;
-
-import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -34,13 +31,13 @@ public class StringReplacer {
 
 	/**
 	 * Builds the replacer. For this algorithm to work correctly, the target
-	 * automaton should be exploded first with a call to
-	 * {@link Automata#explode(Automaton)}.
+	 * automaton is first exploded with a call to
+	 * {@link Automaton#explode()}.
 	 * 
 	 * @param origin the target automaton
 	 */
 	public StringReplacer(Automaton origin) {
-		this.origin = explode(origin);
+		this.origin = origin.explode();
 		searcher = new StringSearcher(origin);
 	}
 
@@ -66,7 +63,7 @@ public class StringReplacer {
 		if (replaceablePaths.isEmpty())
 			return origin;
 
-		Automaton replaced = must ? str : Automata.union(str, Automata.mkAutomaton(toReplace));
+		Automaton replaced = must ? str : str.union(Automaton.mkAutomaton(toReplace));
 		AtomicLong counter = new AtomicLong();
 
 		for (Vector<Transition> path : replaceablePaths) {

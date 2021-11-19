@@ -1,6 +1,5 @@
 package it.unive.tarsis.test;
 
-import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -52,7 +51,7 @@ public class TestUtil {
 					delta.add(new Transition(s, mapping.get(random.nextInt(states.size())), randomChar(charLen)));
 
 			a = new Automaton(delta, states);
-		} while (Automata.isEmptyLanguageAccepted(a));
+		} while (a.isEmptyLanguageAccepted());
 
 		return a;
 	}

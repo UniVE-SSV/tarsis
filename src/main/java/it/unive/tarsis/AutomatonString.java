@@ -1,22 +1,13 @@
 package it.unive.tarsis;
 
-import static it.unive.tarsis.automata.Automata.determinize;
-import static it.unive.tarsis.automata.Automata.explode;
-import static it.unive.tarsis.automata.Automata.extractLongestString;
-import static it.unive.tarsis.automata.Automata.intersection;
-import static it.unive.tarsis.automata.Automata.isEmptyLanguageAccepted;
-import static it.unive.tarsis.automata.Automata.mayLanguageCheck;
-import static it.unive.tarsis.automata.Automata.minimize;
-import static it.unive.tarsis.automata.Automata.mkAutomaton;
-import static it.unive.tarsis.automata.Automata.mkTopAutomaton;
-import static it.unive.tarsis.automata.Automata.mustBeContained;
-import static it.unive.tarsis.automata.Automata.mustLanguageCheck;
-import static it.unive.tarsis.automata.Automata.reverse;
-import static it.unive.tarsis.automata.Automata.union;
-import static it.unive.tarsis.automata.Automata.widening;
 import static it.unive.tarsis.automata.algorithms.RegexExtractor.getMinimalBrzozowskiRegex;
 
-import it.unive.tarsis.automata.Automata;
+import java.util.Collection;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -24,10 +15,6 @@ import it.unive.tarsis.automata.algorithms.IndexFinder;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.TopAtom;
 import it.unive.tarsis.strings.ExtString;
-import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * A string modeled through the Tarsis abstract domain.
@@ -58,7 +45,7 @@ public class AutomatonString {
 	 * Builds a new automaton string recognizing the top string.
 	 */
 	public AutomatonString() {
-		this(mkTopAutomaton());
+		this(Automaton.mkTopAutomaton());
 	}
 
 	/**
@@ -67,7 +54,7 @@ public class AutomatonString {
 	 * @param literal the string
 	 */
 	public AutomatonString(String literal) {
-		this(mkAutomaton(literal));
+		this(Automaton.mkAutomaton(literal));
 	}
 
 	/**
@@ -76,10 +63,10 @@ public class AutomatonString {
 	 * @param lits strings
 	 */
 	public AutomatonString(String... lits) {
-		Automaton a = Automata.mkEmptyLanguage();
+		Automaton a = Automaton.mkEmptyLanguage();
 
 		for (String s : lits)
-			a = Automata.union(a, mkAutomaton(s));
+			a = a.union(Automaton.mkAutomaton(s));
 
 		this.automaton = a;
 	}
@@ -177,12 +164,10 @@ public class AutomatonString {
 	 * @return the least upper bound
 	 */
 	public AutomatonString lub(AutomatonString other, boolean simplify) {
-		Automaton union = union(automaton, other.automaton);
+		Automaton union = automaton.union(other.automaton);
 
-		if (simplify) {
-			union = determinize(union);
-			union = minimize(union);
-		}
+		if (simplify)
+			union = union.minimize();
 
 		return new AutomatonString(union);
 	}
@@ -258,12 +243,10 @@ public class AutomatonString {
 	 * @return the widened string
 	 */
 	public AutomatonString widen(AutomatonString other, int wideningThreshold, boolean simplify) {
-		Automaton widened = widening(union(automaton, other.automaton), wideningThreshold);
+		Automaton widened = automaton.union(other.automaton).widening(wideningThreshold);
 
-		if (simplify) {
-			widened = determinize(widened);
-			widened = minimize(widened);
-		}
+		if (simplify)
+			widened = widened.minimize();
 
 		return new AutomatonString(widened);
 	}
@@ -396,7 +379,7 @@ public class AutomatonString {
 	 * @return the joined string
 	 */
 	public AutomatonString concat(AutomatonString other) {
-		return new AutomatonString(Automata.concat(automaton, other.automaton));
+		return new AutomatonString(automaton.concat(other.automaton));
 	}
 
 	/**
@@ -410,10 +393,12 @@ public class AutomatonString {
 	 * @return an automaton string modeling all possible substrings
 	 */
 	public AutomatonString substring(int start, int end) {
-		Automaton[] array = allSubstrings(start, end).parallelStream().map(s -> mkAutomaton(s))
+		Automaton[] array = allSubstrings(start, end)
+				.parallelStream()
+				.map(s -> Automaton.mkAutomaton(s))
 				.toArray(Automaton[]::new);
-		Automaton result = union(array);
-		result = minimize(result);
+		Automaton result = Automaton.union(array);
+		result = result.minimize();
 		return new AutomatonString(result);
 	}
 
@@ -442,7 +427,7 @@ public class AutomatonString {
 		if (automaton.hasCycle() || toReplace.automaton.hasCycle() || toReplace.automaton.acceptsTopEventually())
 			return new AutomatonString();
 
-		return new AutomatonString(Automata.replace(automaton, explode(toReplace.automaton), str.automaton));
+		return new AutomatonString(automaton.replace(toReplace.automaton.explode(), str.automaton));
 	}
 
 	/**
@@ -515,7 +500,8 @@ public class AutomatonString {
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean contains(AutomatonString other) {
-		return mustOperation(other, String::contains, (a1, a2) -> mustBeContained(explode(other.automaton), automaton));
+		return mustOperation(other, String::contains,
+				(a1, a2) -> other.automaton.explode().mustBeContained(automaton));
 	}
 
 	/**
@@ -562,21 +548,21 @@ public class AutomatonString {
 	 */
 	public boolean endsWith(AutomatonString other) {
 		return mustOperation(other, String::endsWith, (a1, a2) -> {
-			AutomatonString thisReversed = new AutomatonString(reverse(a1.automaton));
-			AutomatonString otherReversed = new AutomatonString(reverse(a2.automaton));
+			AutomatonString thisReversed = new AutomatonString(a1.automaton.reverse());
+			AutomatonString otherReversed = new AutomatonString(a2.automaton.reverse());
 			return thisReversed.automatonStartsWith(otherReversed);
 		});
 	}
 
 	private boolean automatonStartsWith(AutomatonString other) {
 		if (!automaton.hasCycle())
-			return mustLanguageCheck(automaton, other.automaton, String::startsWith);
+			return automaton.mustLanguageCheck(other.automaton, String::startsWith);
 
-		Automaton explode = explode(other.automaton);
+		Automaton explode = other.automaton.explode();
 		if (explode.hasOnlyOnePath()) {
-			Automaton C = extractLongestString(explode);
+			Automaton C = explode.extractLongestString();
 			Automaton B = substring(0, explode.maxLengthString()).automaton;
-			B = minimize(B);
+			B = B.minimize();
 
 			if (B.equals(C))
 				return true;
@@ -585,8 +571,8 @@ public class AutomatonString {
 		return false;
 	}
 
-	private boolean mustOperation(AutomatonString other, BiFunction<String, String, Boolean> languageComparer,
-			BiFunction<AutomatonString, AutomatonString, Boolean> automataComparer) {
+	private boolean mustOperation(AutomatonString other, BiPredicate<String, String> languageComparer,
+			BiPredicate<AutomatonString, AutomatonString> automataComparer) {
 		if (other.automaton.hasCycle())
 			// either this does not have a cycle
 			// or they both have a cycle but we cannot enforce
@@ -601,9 +587,9 @@ public class AutomatonString {
 			return false;
 
 		if (!automaton.hasCycle() && !automaton.acceptsTopEventually())
-			return mustLanguageCheck(automaton, other.automaton, languageComparer);
+			return automaton.mustLanguageCheck(other.automaton, languageComparer);
 
-		return automataComparer.apply(this, other);
+		return automataComparer.test(this, other);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------
@@ -643,8 +629,8 @@ public class AutomatonString {
 	 * {@code other} is a suffix of at least one concrete string modeled by this
 	 * string, according to the semantic of {@link String#endsWith(String)}</li>
 	 * <li>otherwise, the intersection between the suffix automaton (according
-	 * to {@link Automata#suffix(Automaton)} of the automaton underlying this
-	 * string and the one underlying {@code other} must not be empty</li>
+	 * to {@link Automaton#suffix()} of the automaton underlying this string and
+	 * the one underlying {@code other} must not be empty</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
@@ -661,7 +647,7 @@ public class AutomatonString {
 					break outer;
 				}
 
-		return mayOperation(other, top, String::endsWith, Automata::suffix);
+		return mayOperation(other, top, String::endsWith, Automaton::suffix);
 	}
 
 	/**
@@ -674,8 +660,8 @@ public class AutomatonString {
 	 * this string, according to the semantic of
 	 * {@link String#contains(CharSequence)}</li>
 	 * <li>otherwise, the intersection between the factors automaton (according
-	 * to {@link Automata#factors(Automaton)} of the automaton underlying this
-	 * string and the one underlying {@code other} must not be empty</li>
+	 * to {@link Automaton#factors()} of the automaton underlying this string
+	 * and the one underlying {@code other} must not be empty</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
@@ -684,7 +670,7 @@ public class AutomatonString {
 	 * @return {@code true} if that condition holds
 	 */
 	public boolean mayContain(AutomatonString other) {
-		return mayOperation(other, automaton.acceptsTopEventually(), String::contains, Automata::factors);
+		return mayOperation(other, automaton.acceptsTopEventually(), String::contains, Automaton::factors);
 	}
 
 	/**
@@ -697,8 +683,8 @@ public class AutomatonString {
 	 * string, according to the semantic of
 	 * {@link String#startsWith(String)}</li>
 	 * <li>otherwise, the intersection between the prefix automaton (according
-	 * to {@link Automata#prefix(Automaton)} of the automaton underlying this
-	 * string and the one underlying {@code other} must not be empty</li>
+	 * to {@link Automaton#prefix()} of the automaton underlying this string and
+	 * the one underlying {@code other} must not be empty</li>
 	 * </ul>
 	 * If none of the above conditions hold, this method returns {@code false}.
 	 * 
@@ -714,16 +700,20 @@ public class AutomatonString {
 				break;
 			}
 
-		return mayOperation(other, top, String::startsWith, Automata::prefix);
+		return mayOperation(other, top, String::startsWith, Automaton::prefix);
 	}
 
 	private boolean mayOperation(AutomatonString other, boolean okWithTop,
-			BiFunction<String, String, Boolean> languageComparer, Function<Automaton, Automaton> automataTransformer) {
+			BiPredicate<String, String> languageComparer, Function<Automaton, Automaton> automataTransformer) {
 		if (!automaton.hasCycle() && !other.automaton.hasCycle() && !automaton.acceptsTopEventually()
 				&& !other.automaton.acceptsTopEventually())
-			return mayLanguageCheck(automaton, other.automaton, languageComparer);
+			return automaton.mayLanguageCheck(other.automaton, languageComparer);
 
-		return okWithTop || !isEmptyLanguageAccepted(
-				intersection(explode(other.automaton), automataTransformer.apply(explode(automaton))));
+		if (okWithTop)
+			return true;
+
+		Automaton transformed = automataTransformer.apply(automaton.explode());
+		Automaton otherExploded = other.automaton.explode();
+		return !otherExploded.intersection(transformed).isEmptyLanguageAccepted();
 	}
 }

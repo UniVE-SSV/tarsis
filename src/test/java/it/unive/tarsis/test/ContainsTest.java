@@ -2,9 +2,10 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertEquals;
 
-import it.unive.tarsis.AutomatonString;
-import it.unive.tarsis.automata.Automata;
 import org.junit.Test;
+
+import it.unive.tarsis.AutomatonString;
+import it.unive.tarsis.automata.Automaton;
 
 public class ContainsTest {
 
@@ -36,7 +37,7 @@ public class ContainsTest {
 
 	@Test
 	public void containsEmptyStringLoops() {
-		AutomatonString a = new AutomatonString(Automata.star(Automata.mkAutomaton("abc")));
+		AutomatonString a = new AutomatonString(Automaton.mkAutomaton("abc").star());
 		AutomatonString search = new AutomatonString("");
 
 		// abc*.contanins("") = true
@@ -285,7 +286,7 @@ public class ContainsTest {
 
 	@Test
 	public void containsTestOldFa028() {
-		AutomatonString a = new AutomatonString(Automata.star(Automata.mkAutomaton("a")));
+		AutomatonString a = new AutomatonString(Automaton.mkAutomaton("a").star());
 		AutomatonString search = new AutomatonString("a");
 
 		// {a*}.contains("a") = false
@@ -294,7 +295,7 @@ public class ContainsTest {
 
 	@Test
 	public void containsTestOldFa029() {
-		AutomatonString a = new AutomatonString(Automata.star(Automata.mkAutomaton("a")));
+		AutomatonString a = new AutomatonString(Automaton.mkAutomaton("a").star());
 
 		// {a*}.contains(a*) = false
 		assertEquals(a.contains(a), false);

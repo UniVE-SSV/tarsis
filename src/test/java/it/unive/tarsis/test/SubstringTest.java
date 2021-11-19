@@ -1,23 +1,27 @@
 package it.unive.tarsis.test;
 
+import static it.unive.tarsis.automata.Automaton.concat;
+import static it.unive.tarsis.automata.Automaton.mkAutomaton;
+import static it.unive.tarsis.automata.Automaton.union;
+import static it.unive.tarsis.automata.algorithms.RegexExtractor.getMinimalRegex;
 import static it.unive.tarsis.strings.ExtString.mkEmptyString;
 import static it.unive.tarsis.strings.ExtString.mkString;
 import static it.unive.tarsis.strings.ExtString.mkStrings;
 import static it.unive.tarsis.strings.ExtString.mkTopString;
 import static org.junit.Assert.assertTrue;
 
-import it.unive.tarsis.automata.Automata;
+import java.util.Collection;
+import java.util.HashSet;
+
+import org.junit.Test;
+
 import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.automata.algorithms.RegexExtractor;
 import it.unive.tarsis.regex.Atom;
 import it.unive.tarsis.regex.Comp;
 import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.Star;
 import it.unive.tarsis.regex.TopAtom;
 import it.unive.tarsis.strings.ExtString;
-import java.util.Collection;
-import java.util.HashSet;
-import org.junit.Test;
 
 public class SubstringTest {
 
@@ -46,21 +50,21 @@ public class SubstringTest {
 	@Test
 	public void testEmptyString001() {
 
-		Automaton a = Automata.concat(Automata.mkAutomaton("abc"),
-				Automata.union(Automata.mkAutomaton("a"), Automata.mkAutomaton("def")));
+		Automaton a = concat(mkAutomaton("abc"),
+				union(mkAutomaton("a"), mkAutomaton("def")));
 
 		// abc(a | def)[0,0] = {epsilon}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(0, 0), mkEmptyString());
+		checkEquality(getMinimalRegex(a).substring(0, 0), mkEmptyString());
 	}
 
 	@Test
 	public void testEmptyString002() {
 
-		Automaton a = Automata.concat(Automata.mkAutomaton("abc"),
-				Automata.union(Automata.mkAutomaton("a"), Automata.mkAutomaton("def")));
+		Automaton a = concat(mkAutomaton("abc"),
+				union(mkAutomaton("a"), mkAutomaton("def")));
 
 		// abc(a | def)[5,5] = {epsilon}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(5, 5), mkEmptyString());
+		checkEquality(getMinimalRegex(a).substring(5, 5), mkEmptyString());
 	}
 
 	@Test
@@ -73,111 +77,112 @@ public class SubstringTest {
 	@Test
 	public void testComp002() throws Exception {
 
-		Automaton a = Automata.concat(Automata.mkAutomaton("a"), Automata.mkAutomaton("b"), Automata.mkAutomaton("c"),
-				Automata.mkAutomaton("d"));
+		Automaton a = concat(mkAutomaton("a"), mkAutomaton("b"),
+				mkAutomaton("c"),
+				mkAutomaton("d"));
 
 		// abcd[1,2] = {b}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 2), mkString("b"));
+		checkEquality(getMinimalRegex(a).substring(1, 2), mkString("b"));
 	}
 
 	@Test
 	public void testComp003() throws Exception {
 
-		Automaton a = Automata.concat(Automata.mkAutomaton("ab"), Automata.mkAutomaton("cd"));
+		Automaton a = concat(mkAutomaton("ab"), mkAutomaton("cd"));
 
 		// abcd[1,3] = {bc}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 3), mkString("bc"));
+		checkEquality(getMinimalRegex(a).substring(1, 3), mkString("bc"));
 	}
 
 	@Test
 	public void testComp004() throws Exception {
 
-		Automaton a = Automata.concat(Automata.mkAutomaton("ab"), Automata.mkAutomaton("cd"));
+		Automaton a = concat(mkAutomaton("ab"), mkAutomaton("cd"));
 
 		// abcd[0,3] = {abc}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(0, 3), mkString("abc"));
+		checkEquality(getMinimalRegex(a).substring(0, 3), mkString("abc"));
 	}
 
 	@Test
 	public void testOr001() {
 
-		Automaton a = Automata.union(Automata.mkAutomaton("abc"), Automata.mkAutomaton("def"));
+		Automaton a = union(mkAutomaton("abc"), mkAutomaton("def"));
 
 		// (abc | def)[1,2] = {b,e}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 2), mkStrings("b", "e"));
+		checkEquality(getMinimalRegex(a).substring(1, 2), mkStrings("b", "e"));
 	}
 
 	@Test
 	public void testOr002() {
 
-		Automaton a = Automata.union(Automata.mkAutomaton("abc"), Automata.mkAutomaton("dbf"));
+		Automaton a = union(mkAutomaton("abc"), mkAutomaton("dbf"));
 
 		// (abc | dbf)[1,2] = {b}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 2), mkString("b"));
+		checkEquality(getMinimalRegex(a).substring(1, 2), mkString("b"));
 	}
 
 	@Test
 	public void testOr003() {
 
-		Automaton a = Automata.union(Automata.mkAutomaton("abc"), Automata.mkAutomaton("def"),
-				Automata.mkAutomaton("ghi"));
+		Automaton a = union(mkAutomaton("abc"), mkAutomaton("def"),
+				mkAutomaton("ghi"));
 
 		// (abc | def | ghi)[1,2] = {b, e, h}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 2), mkStrings("b", "e", "h"));
+		checkEquality(getMinimalRegex(a).substring(1, 2), mkStrings("b", "e", "h"));
 	}
 
 	@Test
 	public void testOr004() {
 
-		Automaton a = Automata.concat(Automata.mkAutomaton("abc"),
-				Automata.union(Automata.mkAutomaton("abc"), Automata.mkAutomaton("def")));
+		Automaton a = concat(mkAutomaton("abc"),
+				union(mkAutomaton("abc"), mkAutomaton("def")));
 
 		// abc(abc | def)[1,2] = {b}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 2), mkString("b"));
+		checkEquality(getMinimalRegex(a).substring(1, 2), mkString("b"));
 	}
 
 	@Test
 	public void testOr005() {
 
-		Automaton a = Automata.concat(Automata.mkAutomaton("abc"),
-				Automata.union(Automata.mkAutomaton("abc"), Automata.mkAutomaton("def")));
+		Automaton a = concat(mkAutomaton("abc"),
+				union(mkAutomaton("abc"), mkAutomaton("def")));
 
 		// abc(abc | def)[2,4] = {ca, cd}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(2, 4), mkStrings("ca", "cd"));
+		checkEquality(getMinimalRegex(a).substring(2, 4), mkStrings("ca", "cd"));
 	}
 
 	@Test
 	public void testStar001() {
 
-		Automaton a = Automata.concat(Automata.star(Automata.mkAutomaton("abc")), Automata.mkAutomaton("def"));
+		Automaton a = concat(mkAutomaton("abc").star(), mkAutomaton("def"));
 
 		// (abc)*def[1,2] = {b}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 2), mkStrings("e", "b"));
+		checkEquality(getMinimalRegex(a).substring(1, 2), mkStrings("e", "b"));
 	}
 
 	@Test
 	public void testStar002() {
 
-		Automaton a = Automata.concat(Automata.star(Automata.mkAutomaton("abc")), Automata.mkAutomaton("def"));
+		Automaton a = concat(mkAutomaton("abc").star(), mkAutomaton("def"));
 
 		// (abc)*[1,3] = {"", bc}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 3), mkStrings("ef", "bc"));
+		checkEquality(getMinimalRegex(a).substring(1, 3), mkStrings("ef", "bc"));
 	}
 
 	@Test
 	public void testStar003() {
-		Automaton a = Automata.star(Automata.mkAutomaton("abcd"));
+		Automaton a = mkAutomaton("abcd").star();
 
 		// (abcd)*[3,5] = {da}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(3, 5), mkStrings("da"));
+		checkEquality(getMinimalRegex(a).substring(3, 5), mkStrings("da"));
 	}
 
 	@Test
 	public void testStar004() {
-		Automaton a = Automata.concat(Automata.star(Automata.mkAutomaton("abcd")), Automata.mkAutomaton("e"));
+		Automaton a = concat(mkAutomaton("abcd").star(), mkAutomaton("e"));
 
 		// (abcd)*e[3,5] = {de, da}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(3, 5), mkStrings("de", "da"));
+		checkEquality(getMinimalRegex(a).substring(3, 5), mkStrings("de", "da"));
 	}
 
 	@Test
@@ -246,56 +251,55 @@ public class SubstringTest {
 	@Test
 	public void subsTestOldFa001() {
 
-		Automaton a = Automata.mkAutomaton("a");
+		Automaton a = mkAutomaton("a");
 
 		// (a)[0,1] = {a}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(0, 1), mkStrings("a"));
+		checkEquality(getMinimalRegex(a).substring(0, 1), mkStrings("a"));
 	}
 
 	@Test
 	public void subsTestOldFa002() {
-		Automaton a = Automata.mkAutomaton("a");
+		Automaton a = mkAutomaton("a");
 
 		// (a)[0,0] = {""}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(0, 0), mkStrings(""));
+		checkEquality(getMinimalRegex(a).substring(0, 0), mkStrings(""));
 	}
 
 	@Test
 	public void subsTestOldFa003() {
 
-		Automaton a = Automata.union(Automata.mkAutomaton("a"), Automata.mkAutomaton("b"));
+		Automaton a = union(mkAutomaton("a"), mkAutomaton("b"));
 
 		// (a || b)[0,1] = ("a", "b")
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(0, 1), mkStrings("a", "b"));
+		checkEquality(getMinimalRegex(a).substring(0, 1), mkStrings("a", "b"));
 
 	}
 
 	@Test
 	public void subsTestOldFa004() {
-		Automaton a = Automata.union(Automata.mkAutomaton("abc"), Automata.mkAutomaton("def"));
+		Automaton a = union(mkAutomaton("abc"), mkAutomaton("def"));
 
 		// (abc || def)[1,2] = {"b", "e"}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(1, 2), mkStrings("b", "e"));
+		checkEquality(getMinimalRegex(a).substring(1, 2), mkStrings("b", "e"));
 
 	}
 
 	@Test
 	public void subsTestOldFa005() {
-		Automaton a = Automata.star(Automata.mkAutomaton("a"));
+		Automaton a = mkAutomaton("a").star();
 
 		// (a*)[0,3] = {"aaa"}
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(0, 3), mkStrings("aaa"));
+		checkEquality(getMinimalRegex(a).substring(0, 3), mkStrings("aaa"));
 	}
 
 	@Test
 	public void substringTest6() {
 
-		Automaton a = Automata.concat(
-				Automata.union(Automata.mkAutomaton("a"), Automata.mkAutomaton("b"), Automata.mkAutomaton("c")),
-				Automata.star(Automata.union(Automata.mkAutomaton("a"), Automata.mkAutomaton("b"),
-						Automata.mkAutomaton("c"))));
+		Automaton a = concat(
+				union(mkAutomaton("a"), mkAutomaton("b"), mkAutomaton("c")),
+				union(mkAutomaton("a"), mkAutomaton("b"), mkAutomaton("c")).star());
 
-		checkEquality(RegexExtractor.getMinimalRegex(a).substring(0, 2),
+		checkEquality(getMinimalRegex(a).substring(0, 2),
 				mkStrings("aa", "bb", "cc", "ab", "ac", "bc", "ba", "ca", "cb"));
 
 	}

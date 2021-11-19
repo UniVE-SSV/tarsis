@@ -1,9 +1,9 @@
 package it.unive.tarsis.regex;
 
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
 import java.util.HashSet;
 import java.util.Set;
+
+import it.unive.tarsis.automata.Automaton;
 
 /**
  * A regular expression representing an or between two other regular
@@ -149,7 +149,7 @@ public class Or extends RegularExpression {
 
 	@Override
 	public Automaton toAutomaton() {
-		return Automata.union(first.toAutomaton(), second.toAutomaton());
+		return first.toAutomaton().union(second.toAutomaton());
 	}
 
 	@Override

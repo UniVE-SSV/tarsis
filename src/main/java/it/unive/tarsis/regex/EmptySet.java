@@ -1,10 +1,10 @@
 package it.unive.tarsis.regex;
 
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.strings.ExtString;
 import java.util.HashSet;
 import java.util.Set;
+
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.strings.ExtString;
 
 /**
  * A regular expression representing the empty set of strings.
@@ -44,7 +44,7 @@ public class EmptySet extends RegularExpression {
 
 	@Override
 	public Automaton toAutomaton() {
-		return Automata.mkEmptyLanguage();
+		return Automaton.mkEmptyLanguage();
 	}
 
 	@Override

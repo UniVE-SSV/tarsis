@@ -1,6 +1,5 @@
 package it.unive.tarsis.automata.algorithms;
 
-import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -34,13 +33,13 @@ public class StringSearcher {
 
 	/**
 	 * Builds the searcher. For this algorithm to work correctly, the target
-	 * automaton should be exploded first with a call to
-	 * {@link Automata#explode(Automaton)}.
+	 * automaton is first exploded with a call to
+	 * {@link Automaton#explode()}.
 	 * 
 	 * @param origin the target automaton
 	 */
 	public StringSearcher(Automaton origin) {
-		automaton = origin;
+		automaton = origin.explode();
 		searchString = null;
 		matching = false;
 	}

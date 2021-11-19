@@ -1,10 +1,10 @@
 package it.unive.tarsis.regex;
 
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.strings.ExtString;
 import java.util.HashSet;
 import java.util.Set;
+
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.strings.ExtString;
 
 /**
  * A regular expression representing a single string.
@@ -47,7 +47,7 @@ public class Atom extends RegularExpression {
 
 	@Override
 	public Automaton toAutomaton() {
-		return isEmpty() ? Automata.mkEmptyString() : Automata.mkAutomaton(string);
+		return isEmpty() ? Automaton.mkEmptyString() : Automaton.mkAutomaton(string);
 	}
 
 	@Override

@@ -1,20 +1,25 @@
 package it.unive.tarsis.test;
 
+import static it.unive.tarsis.automata.Automaton.concat;
+import static it.unive.tarsis.automata.Automaton.mkAutomaton;
+import static it.unive.tarsis.automata.Automaton.mkEmptyLanguage;
+import static it.unive.tarsis.automata.Automaton.union;
+import static it.unive.tarsis.automata.algorithms.RegexExtractor.getRegexesFromPaths;
 import static it.unive.tarsis.test.TestUtil.addEdges;
 import static it.unive.tarsis.test.TestUtil.build;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import it.unive.tarsis.automata.Automata;
+import java.util.Set;
+
+import org.junit.Test;
+
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
-import it.unive.tarsis.automata.algorithms.RegexExtractor;
 import it.unive.tarsis.regex.Atom;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.TopAtom;
-import java.util.Set;
-import org.junit.Test;
 
 public class SinglePathsTest {
 	@Test
@@ -28,7 +33,7 @@ public class SinglePathsTest {
 				new Transition(q1, q2, TopAtom.INSTANCE), new Transition(q2, q0, new Atom(";")),
 				new Transition(q0, q3, new Atom("y=7;")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -43,7 +48,7 @@ public class SinglePathsTest {
 				new Transition(q1, q3, new Atom("y=7;")), new Transition(q0, q1, new Atom("z=5;")),
 				new Transition(q0, q3, new Atom("id=5;")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -58,7 +63,7 @@ public class SinglePathsTest {
 				new Transition(q1, q3, new Atom("id=T;")), new Transition(q1, q2, new Atom("x=5;")),
 				new Transition(q2, q1, new Atom("y=7;")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 
 	}
 
@@ -74,7 +79,7 @@ public class SinglePathsTest {
 				new Transition(q1, q2, new Atom("id=3;")), new Transition(q2, q3, new Atom("x=5;")),
 				new Transition(q1, q4, new Atom("y=4;")), new Transition(q4, q2, new Atom("y=5;")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -94,7 +99,7 @@ public class SinglePathsTest {
 				new Transition(q5, q3, new Atom("x=8;")), new Transition(q5, q6, new Atom("y=9;")),
 				new Transition(q6, q5, new Atom("y=11;")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -106,7 +111,7 @@ public class SinglePathsTest {
 		Automaton a = addEdges(build(q0, q1, q2), new Transition(q0, q1, new Atom("id=T;")),
 				new Transition(q1, q2, new Atom("x=5;")), new Transition(q1, q1, new Atom("y=7;")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -119,33 +124,30 @@ public class SinglePathsTest {
 				new Transition(q1, q0, new Atom("y=2;")), new Transition(q1, q2, new Atom("x=x+1;")),
 				new Transition(q2, q1, new Atom("y=y+1;")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
 	public void pathTest008() {
-		Automaton a = Automata.concat(Automata.mkAutomaton("a"), Automata.star(Automata.mkAutomaton("b")),
-				Automata.mkAutomaton("c"));
+		Automaton a = concat(mkAutomaton("a"), mkAutomaton("b").star(), mkAutomaton("c"));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
 	public void pathTest009() {
-		Automaton a = Automata.concat(Automata.mkAutomaton("aaa"),
-				Automata.star(Automata.union(Automata.mkAutomaton("bbb"), Automata.mkAutomaton("eeee"))),
-				Automata.mkAutomaton("cccc"));
+		Automaton a = concat(mkAutomaton("aaa"),
+				union(mkAutomaton("bbb"), mkAutomaton("eeee")).star(), mkAutomaton("cccc"));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
 	public void pathTest010() {
-		Automaton a = Automata.concat(Automata.mkAutomaton("zb"), Automata.star(
-				Automata.concat(Automata.mkAutomaton("cc"), Automata.mkAutomaton("ny"), Automata.mkAutomaton("lz"))),
-				Automata.mkAutomaton("cccc"));
+		Automaton a = concat(mkAutomaton("zb"),
+				concat(mkAutomaton("cc"), mkAutomaton("ny"), mkAutomaton("lz")).star(), mkAutomaton("cccc"));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -159,7 +161,7 @@ public class SinglePathsTest {
 				new Transition(q1, q2, new Atom("zt")), new Transition(q2, q3, new Atom("vg")),
 				new Transition(q3, q1, new Atom("gb")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -174,19 +176,18 @@ public class SinglePathsTest {
 				new Transition(q1, q2, new Atom("zt")), new Transition(q2, q3, new Atom("vg")),
 				new Transition(q3, q1, new Atom("gb")), new Transition(q1, q4, new Atom("zt")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
 	public void pathTest013() {
 
-		Automaton a = Automata.mkAutomaton("rw");
+		Automaton a = mkAutomaton("rw");
 
-		Automaton b = Automata.concat(Automata.mkAutomaton("rw"), Automata.mkAutomaton("hj"),
-				Automata.mkAutomaton("ln"), Automata.star(Automata.mkAutomaton("vx")));
+		Automaton b = concat(mkAutomaton("rw"), mkAutomaton("hj"), mkAutomaton("ln"), mkAutomaton("vx").star());
 
-		a = Automata.union(a, b);
-		assertTrue(Automata.isContained(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a))));
+		a = union(a, b);
+		assertTrue(a.isContained(regexesToAutomaton(getRegexesFromPaths(a))));
 	}
 
 	@Test
@@ -200,7 +201,7 @@ public class SinglePathsTest {
 				new Transition(q1, q2, new Atom("gw")), new Transition(q2, q2, new Atom("lc")),
 				new Transition(q2, q0, new Atom("yz")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -213,7 +214,7 @@ public class SinglePathsTest {
 				new Transition(q0, q2, new Atom("kf")), new Transition(q1, q1, new Atom("cd")),
 				new Transition(q1, q2, new Atom("sp")));
 
-		assertEquals(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a)));
+		assertEquals(a, regexesToAutomaton(getRegexesFromPaths(a)));
 	}
 
 	@Test
@@ -226,7 +227,7 @@ public class SinglePathsTest {
 				new Transition(q0, q2, new Atom("kf")), new Transition(q1, q1, new Atom("cd")),
 				new Transition(q1, q2, new Atom("sp")));
 
-		assertTrue(Automata.isContained(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a))));
+		assertTrue(a.isContained(regexesToAutomaton(getRegexesFromPaths(a))));
 	}
 
 	@Test
@@ -243,7 +244,7 @@ public class SinglePathsTest {
 				new Transition(q3, q2, new Atom("d")), new Transition(q3, q4, new Atom("e")),
 				new Transition(q4, q5, new Atom("f")), new Transition(q5, q1, new Atom("h")));
 
-		assertTrue(Automata.isContained(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a))));
+		assertTrue(a.isContained(regexesToAutomaton(getRegexesFromPaths(a))));
 	}
 
 	@Test
@@ -257,7 +258,7 @@ public class SinglePathsTest {
 				new Transition(q1, q2, new Atom("b")), new Transition(q1, q3, new Atom("c")),
 				new Transition(q2, q3, new Atom("d")), new Transition(q3, q1, new Atom("e")));
 
-		assertTrue(Automata.isContained(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a))));
+		assertTrue(a.isContained(regexesToAutomaton(getRegexesFromPaths(a))));
 	}
 
 	@Test
@@ -273,17 +274,17 @@ public class SinglePathsTest {
 				new Transition(q2, q1, new Atom("j4")), new Transition(q3, q3, new Atom("vg")),
 				new Transition(q3, q2, new Atom("gx")));
 
-		assertTrue(Automata.isContained(a, regexesToAutomaton(RegexExtractor.getRegexesFromPaths(a))));
+		assertTrue(a.isContained(regexesToAutomaton(getRegexesFromPaths(a))));
 	}
 
 	private Automaton regexesToAutomaton(Set<RegularExpression> regexes) {
 
-		Automaton result = Automata.mkEmptyLanguage();
+		Automaton result = mkEmptyLanguage();
 
 		for (RegularExpression r : regexes)
-			result = Automata.union(result, r.toAutomaton());
+			result = union(result, r.toAutomaton());
 
-		result = Automata.minimize(result);
+		result = result.minimize();
 		return result;
 
 	}

@@ -1,6 +1,5 @@
 package it.unive.tarsis.automata.algorithms;
 
-import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -38,7 +37,7 @@ public class IndexFinder {
 	 *             {@code null} to represent infinity
 	 */
 	public static Pair<Integer, Integer> findIndexesOf(Automaton automaton, Automaton search) {
-		Automaton exploded = Automata.explode(automaton);
+		Automaton exploded = automaton.explode();
 		StringSearcher searcher = new StringSearcher(exploded);
 		Set<List<State>> allPaths = exploded.getPathExtractor().getAllPaths();
 		Set<Transition> topTransitions = exploded.getDelta().parallelStream()

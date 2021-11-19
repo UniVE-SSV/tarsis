@@ -2,14 +2,15 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertEquals;
 
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.automata.algorithms.RegexExtractor;
-import it.unive.tarsis.strings.ExtString;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+
 import org.junit.Test;
+
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.automata.algorithms.RegexExtractor;
+import it.unive.tarsis.strings.ExtString;
 
 public class RandomSubstringTest {
 
@@ -23,9 +24,9 @@ public class RandomSubstringTest {
 	@Test
 	public void randomSubstringTests() {
 		int init, end;
-		int automataToTest = 5000;
+		int AutomatonToTest = 5000;
 
-		for (int i = 0; i < automataToTest; i++) {
+		for (int i = 0; i < AutomatonToTest; i++) {
 			init = (int) random.nextInt(MAX_INIT);
 			end = (int) random.nextInt(MAX_END);
 
@@ -54,11 +55,11 @@ public class RandomSubstringTest {
 	}
 
 	private Automaton randomAutomaton(int languageSize) {
-		Automaton result = Automata.mkAutomaton(randomString((int) random.nextInt(MAX_STRING_LENGTH)));
+		Automaton result = Automaton.mkAutomaton(randomString((int) random.nextInt(MAX_STRING_LENGTH)));
 
 		for (int i = 1; i < languageSize; i++)
-			result = Automata.union(result,
-					Automata.mkAutomaton(randomString((int) random.nextInt(MAX_STRING_LENGTH))));
+			result = Automaton.union(result,
+					Automaton.mkAutomaton(randomString((int) random.nextInt(MAX_STRING_LENGTH))));
 
 		return result;
 	}

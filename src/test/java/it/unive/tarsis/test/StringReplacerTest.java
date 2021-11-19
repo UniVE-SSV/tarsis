@@ -1,13 +1,18 @@
 package it.unive.tarsis.test;
 
+import static it.unive.tarsis.automata.Automaton.concat;
+import static it.unive.tarsis.automata.Automaton.mkAutomaton;
+import static it.unive.tarsis.automata.Automaton.mkTopAutomaton;
+import static it.unive.tarsis.automata.Automaton.union;
 import static org.junit.Assert.assertEquals;
 
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+
 import org.junit.Test;
+
+import it.unive.tarsis.automata.Automaton;
 
 public class StringReplacerTest {
 
@@ -16,7 +21,7 @@ public class StringReplacerTest {
 		Set<String> manualReplace = originalLanguage.stream().map(s -> s.replace(toReplace, str))
 				.collect(Collectors.toSet());
 		// manualReplace.addAll(originalLanguage); THESE ARE ALL MUST-REPLACES
-		Automaton replaced = Automata.replace(original, Automata.mkAutomaton(toReplace), Automata.mkAutomaton(str));
+		Automaton replaced = original.replace(mkAutomaton(toReplace), mkAutomaton(str));
 		Set<String> replacedLanguage = replaced.getLanguage();
 
 		if (!manualReplace.equals(replacedLanguage))
@@ -30,7 +35,7 @@ public class StringReplacerTest {
 
 	@Test
 	public void testReplaceNoOr() {
-		Automaton a = Automata.mkAutomaton("abcbcd");
+		Automaton a = mkAutomaton("abcbcd");
 		performReplace(a, "bcd", "");
 		performReplace(a, "bcd", "h");
 		performReplace(a, "bcd", "hk");
@@ -40,8 +45,7 @@ public class StringReplacerTest {
 
 	@Test
 	public void testReplaceOrInTheMiddle() {
-		Automaton a = Automata.concat(Automata.mkAutomaton("abcb"),
-				Automata.union(Automata.mkAutomaton("cd"), Automata.mkAutomaton("f"), Automata.mkAutomaton("z")));
+		Automaton a = concat(mkAutomaton("abcb"), union(mkAutomaton("cd"), mkAutomaton("f"), mkAutomaton("z")));
 		performReplace(a, "bcd", "");
 		performReplace(a, "bcd", "h");
 		performReplace(a, "bcd", "hk");
@@ -51,8 +55,7 @@ public class StringReplacerTest {
 
 	@Test
 	public void testReplaceOrAtTheBeginning() {
-		Automaton a = Automata.concat(Automata.mkAutomaton("abc"),
-				Automata.union(Automata.mkAutomaton("bcd"), Automata.mkAutomaton("bf"), Automata.mkAutomaton("bz")));
+		Automaton a = concat(mkAutomaton("abc"), union(mkAutomaton("bcd"), mkAutomaton("bf"), mkAutomaton("bz")));
 		performReplace(a, "bcd", "");
 		performReplace(a, "bcd", "h");
 		performReplace(a, "bcd", "hk");
@@ -62,8 +65,7 @@ public class StringReplacerTest {
 
 	@Test
 	public void testReplaceOrAtTheEnd() {
-		Automaton a = Automata.concat(Automata.mkAutomaton("abcbc"),
-				Automata.union(Automata.mkAutomaton("df"), Automata.mkAutomaton("dz"), Automata.mkAutomaton("u")));
+		Automaton a = concat(mkAutomaton("abcbc"), union(mkAutomaton("df"), mkAutomaton("dz"), mkAutomaton("u")));
 		performReplace(a, "bcd", "");
 		performReplace(a, "bcd", "h");
 		performReplace(a, "bcd", "hk");
@@ -73,8 +75,7 @@ public class StringReplacerTest {
 
 	@Test
 	public void testReplaceWithTop() {
-		Automaton a = Automata.concat(Automata.mkAutomaton("abcbc"),
-				Automata.union(Automata.mkAutomaton("df"), Automata.mkTopAutomaton(), Automata.mkAutomaton("u")));
+		Automaton a = concat(mkAutomaton("abcbc"), union(mkAutomaton("df"), mkTopAutomaton(), mkAutomaton("u")));
 		performReplace(a, "bcd", "");
 		performReplace(a, "bcd", "h");
 		performReplace(a, "bcd", "hk");

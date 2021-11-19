@@ -1,6 +1,5 @@
 package it.unive.tarsis.automata.algorithms;
 
-import it.unive.tarsis.automata.Automata;
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -273,7 +272,7 @@ public class RegexExtractor {
 				transitionsToRemove.add(t);
 
 		clone.removeTransitions(transitionsToRemove);
-		clone = Automata.minimize(clone);
+		clone = clone.minimize();
 
 		return getBrzozowskiRegex(clone);
 	}

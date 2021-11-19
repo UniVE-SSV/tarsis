@@ -1,10 +1,10 @@
 package it.unive.tarsis.regex;
 
-import it.unive.tarsis.automata.Automata;
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.strings.ExtString;
 import java.util.HashSet;
 import java.util.Set;
+
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.strings.ExtString;
 
 /**
  * A regular expression representing a loop, repeated an arbitrary number of
@@ -70,7 +70,7 @@ public class Star extends RegularExpression {
 
 	@Override
 	public Automaton toAutomaton() {
-		return Automata.star(op.toAutomaton());
+		return op.toAutomaton().star();
 	}
 
 	@Override
