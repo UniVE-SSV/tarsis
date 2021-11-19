@@ -25,6 +25,27 @@ import it.unive.tarsis.strings.ExtString;
 public class AutomatonString {
 
 	/**
+	 * Creates a new {@link AutomatonString} recognizing any possible string.
+	 * The underlying automaton usually have two states with a single transition
+	 * connecting them that recognizes the top string.
+	 * 
+	 * @return the top element of the lattice
+	 */
+	public static AutomatonString mkTop() {
+		return new AutomatonString();
+	}
+
+	/**
+	 * Creates a new {@link AutomatonString} recognizing no strings. The
+	 * underlying automaton recognizes the empty language.
+	 * 
+	 * @return the bottom element of the lattice
+	 */
+	public static AutomatonString mkBottom() {
+		return new AutomatonString(Automaton.mkEmptyLanguage());
+	}
+
+	/**
 	 * Maximum widening threshold, or default threshold if there is no
 	 * difference in the size of the two automata.
 	 */
@@ -143,8 +164,21 @@ public class AutomatonString {
 	}
 
 	/**
+	 * Yields {@code true} iff {@code this} &le; {@code other}, that is, if the
+	 * partial order relation hold for {@code this} and {@code other}. This
+	 * boils down to the automata inclusion check.
+	 * 
+	 * @param other the other string
+	 * 
+	 * @return {@code true} iff {@code this} is in relation with {@code other}
+	 */
+	public boolean lessOrEqual(AutomatonString other) {
+		return automaton.isContained(other.automaton);
+	}
+
+	/**
 	 * Performs the least upper bound between this string and the given one,
-	 * without simplifying (i.e., determinizing and minimizing) the result.
+	 * simplifying (i.e., determinizing and minimizing) the result.
 	 * 
 	 * @param other the other string
 	 * 
@@ -165,6 +199,36 @@ public class AutomatonString {
 	 */
 	public AutomatonString lub(AutomatonString other, boolean simplify) {
 		Automaton union = automaton.union(other.automaton);
+
+		if (simplify)
+			union = union.minimize();
+
+		return new AutomatonString(union);
+	}
+
+	/**
+	 * Performs the greatest lower bound between this string and the given one,
+	 * simplifying (i.e., determinizing and minimizing) the result.
+	 * 
+	 * @param other the other string
+	 * 
+	 * @return the greatest lower bound
+	 */
+	public AutomatonString glb(AutomatonString other) {
+		return glb(other, true);
+	}
+
+	/**
+	 * Performs the greatest lower bound between this string and the given one.
+	 * 
+	 * @param other    the other string
+	 * @param simplify if true, the result will be simplified (i.e.,
+	 *                     determinized and minimized)
+	 * 
+	 * @return the greatest lower bound
+	 */
+	public AutomatonString glb(AutomatonString other, boolean simplify) {
+		Automaton union = automaton.intersection(other.automaton);
 
 		if (simplify)
 			union = union.minimize();
