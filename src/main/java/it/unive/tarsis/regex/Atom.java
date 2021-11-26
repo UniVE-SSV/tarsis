@@ -13,6 +13,8 @@ import it.unive.tarsis.strings.ExtString;
  * @author <a href="mailto:luca.negrini@unive.it">Luca Negrini</a>
  */
 public class Atom extends RegularExpression {
+	
+	public static final Atom EPSILON = new Atom("");
 
 	private String string;
 

@@ -159,7 +159,7 @@ public class TopAtom extends Atom {
 
 	@Override
 	protected RegularExpression topAsEmptyString() {
-		return new Atom("");
+		return Atom.EPSILON;
 	}
 
 	@Override

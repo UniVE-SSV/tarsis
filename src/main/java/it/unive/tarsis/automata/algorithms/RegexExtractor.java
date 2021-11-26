@@ -1,5 +1,12 @@
 package it.unive.tarsis.automata.algorithms;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -9,10 +16,6 @@ import it.unive.tarsis.regex.EmptySet;
 import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.Star;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * An algorithm that extract regular expressions from automata.
@@ -58,7 +61,7 @@ public class RegexExtractor {
 		Set<RegularExpression> toRemove = new HashSet<>();
 
 		SCCs sccs = SCCs.getSCCs(a);
-		partial.add(new Atom(""));
+		partial.add(Atom.EPSILON);
 
 		for (int i = 0; i < p.size() - 1; i++) {
 			partial.addAll(toAdd);
@@ -68,7 +71,7 @@ public class RegexExtractor {
 			toAdd.clear();
 
 			if (i == 1)
-				partial.remove(new Atom(""));
+				partial.remove(Atom.EPSILON);
 
 			if (sccs.isEmpty())
 				for (RegularExpression s : partial)
@@ -172,59 +175,105 @@ public class RegexExtractor {
 
 		return false;
 	}
+	
+	private static State nextNonInitialState(Iterator<State> it) {
+		while (it.hasNext()) {
+			State cursor = it.next();
+			if (!cursor.isInitialState())
+				return cursor;
+		}
+		
+		return null;
+	}
 
 	/**
 	 * https://cs.stackexchange.com/questions/2016/how-to-convert-finite-automata-to-regular-expressions
 	 * - (Brzozowski algebraic method)
 	 */
 	private static RegularExpression getBrzozowskiRegex(Automaton a) {
-		int n = a.getStates().size();
-		int i = 0;
+		a = a.toSingleInitalState();
+		int m = a.getStates().size();
 
-		RegularExpression[] B = new RegularExpression[n];
-		RegularExpression[][] A = new RegularExpression[n][n];
+		// in both A and B, the initial state is at index 0
+		RegularExpression[][] A = new RegularExpression[m][m];
+		RegularExpression[] B = new RegularExpression[m];
 
-		HashMap<Integer, State> mapping = new HashMap<Integer, State>();
+		Map<Integer, State> mapping = new HashMap<>();
+		mapping.put(0, a.getInitialState());
+		
+		// NOTE: algorithm's indexing is 1-based, java is 0-based
+		
+		/*
+		for i = 1 to m:
+		 	if final(i):
+		    	B[i] := ε
+		  	else:
+		    	B[i] := ∅
+		for i = 1 to m:
+  			for j = 1 to m:
+		    	for a in Σ:
+			      	if trans(i, a, j):
+			        	A[i,j] := a
+			      	else:
+			        	A[i,j] := ∅
+		*/
+		Iterator<State> it = a.getStates().iterator();
+		for (int i = 0; i < m; i++) {
+			State source = mapping.get(i);
+			if (source == null) {
+				source = nextNonInitialState(it);
+				mapping.put(i, source);
+			}
 
-		int indexOfInitialState = 0;
-		for (State s : a.getStates()) {
-			mapping.put(i, s);
-
-			if (s.isFinalState())
-				B[i] = new Atom("");
+			if (source.isFinalState())
+				B[i] = Atom.EPSILON;
 			else
 				B[i] = EmptySet.INSTANCE;
-
-			if (s.isInitialState())
-				indexOfInitialState = i;
-
-			i++;
+			
+			for (int j = 0; j < m; j++) {
+				State dest = mapping.get(j);
+				if (dest == null) {
+					dest = nextNonInitialState(it);
+					mapping.put(j, dest);
+				}
+				
+				Iterator<Transition> tt = a.getAllTransitionsConnecting(source, dest).iterator();
+				if (!tt.hasNext())
+					A[i][j] = EmptySet.INSTANCE; 
+				else {
+					A[i][j] = tt.next().getInput(); 
+					while (tt.hasNext())
+						A[i][j] = new Or(A[i][j], tt.next().getInput());
+				}
+			}				
 		}
 
-		for (i = 0; i < n; i++)
-			for (int j = 0; j < n; j++) {
-				Set<Transition> tt = a.getAllTransitionsConnecting(mapping.get(i), mapping.get(j));
-				A[i][j] = EmptySet.INSTANCE;
-
-				for (Transition t : tt)
-					A[i][j] = new Or(A[i][j], t.getInput());
-			}
-
-		for (i = n - 1; i >= 0; i--) {
-			B[i] = new Comp(new Star(A[i][i]), B[i]);
+		/*
+		for n = m decreasing to 1:
+		  	B[n] := star(A[n,n]) . B[n]
+		  	for j = 1 to n:
+		    	A[n,j] := star(A[n,n]) . A[n,j];
+		  	for i = 1 to n:
+		    	B[i] += A[i,n] . B[n]
+		    	for j = 1 to n:
+		      		A[i,j] += A[i,n] . A[n,j]
+		 */
+		for (int n = m - 1; n >= 0; n--) {
+			Star star_nn = new Star(A[n][n]);
+			B[n] = new Comp(star_nn, B[n]);
 
 			for (int j = 0; j < n; j++)
-				A[i][j] = new Comp(new Star(A[i][i]), A[i][j]);
+				A[n][j] = new Comp(star_nn, A[n][j]);
 
-			for (int j = 0; j < n; j++) {
-				B[j] = new Or(B[j], new Comp(A[j][i], B[i]));
+			for (int i = 0; i < n; i++) {
+				B[i] = new Or(B[i], new Comp(A[i][n], B[n]));
 
-				for (int k = 0; k < n; k++)
-					A[j][k] = new Or(A[j][k], new Comp(A[j][i], A[i][k]));
+				for (int j = 0; j < n; j++)
+					A[i][j] = new Or(A[i][j], new Comp(A[i][n], A[n][j]));
 			}
 		}
 
-		return B[indexOfInitialState].simplify();
+		return B[0].simplify();
 	}
 
 	/**

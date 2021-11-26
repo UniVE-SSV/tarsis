@@ -111,9 +111,9 @@ public class StringReplacer {
 			origin.getStates().addAll(states);
 			origin.getDelta().addAll(delta);
 			origin.addTransition(path.firstElement().getFrom(), conversion.get(replaced.getInitialState()),
-					new Atom(""));
+					Atom.EPSILON);
 			for (State f : replaced.getFinalStates())
-				origin.addTransition(conversion.get(f), path.lastElement().getTo(), new Atom(""));
+				origin.addTransition(conversion.get(f), path.lastElement().getTo(), Atom.EPSILON);
 
 			origin.recomputeOutgoingAdjacencyList();
 		}
@@ -142,7 +142,7 @@ public class StringReplacer {
 				}
 			}
 
-			delta.add(new Transition(t.getFrom(), conversion.get(str.getInitialState()), new Atom("")));
+			delta.add(new Transition(t.getFrom(), conversion.get(str.getInitialState()), Atom.EPSILON));
 			for (State f : str.getFinalStates())
 				delta.add(new Transition(conversion.get(f), t.getTo(), t.getInput()));
 			edgesToRemove.add(t);
@@ -163,7 +163,7 @@ public class StringReplacer {
 				}
 			}
 
-			delta.add(new Transition(f, conversion.get(str.getInitialState()), new Atom("")));
+			delta.add(new Transition(f, conversion.get(str.getInitialState()), Atom.EPSILON));
 		}
 
 		origin.removeTransitions(edgesToRemove);

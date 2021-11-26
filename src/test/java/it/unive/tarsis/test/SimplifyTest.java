@@ -21,7 +21,7 @@ public class SimplifyTest {
 
 	@Test
 	public void testCompOfEpsilonAndSomething() {
-		RegularExpression regex = new Comp(new Atom(""), new Atom("p"));
+		RegularExpression regex = new Comp(Atom.EPSILON, new Atom("p"));
 		assertEquals("p", regex.simplify().toString());
 	}
 

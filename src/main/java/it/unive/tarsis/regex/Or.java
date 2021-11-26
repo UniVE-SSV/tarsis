@@ -98,18 +98,18 @@ public class Or extends RegularExpression {
 			result = first;
 		else if (first instanceof Atom && first.asAtom().isEmpty() && second instanceof Atom
 				&& second.asAtom().isEmpty())
-			result = new Atom("");
+			result = Atom.EPSILON;
 		else if (first instanceof Atom && first.asAtom().isEmpty() && second instanceof Star)
 			result = second;
 		else if (second instanceof Atom && second.asAtom().isEmpty() && first instanceof Star)
 			result = first;
 
 		// "" + ee* => e*
-		else if (first.equals(new Atom("")) && second instanceof Comp && second.asComp().getSecond() instanceof Star
+		else if (first.equals(Atom.EPSILON) && second instanceof Comp && second.asComp().getSecond() instanceof Star
 				&& second.asComp().getFirst().equals(second.asComp().getSecond().asStar().getOperand()))
 			result = new Star(second.asComp().getFirst());
 		// "" + e*e => e*
-		else if (first.equals(new Atom("")) && second instanceof Comp && second.asComp().getFirst() instanceof Star
+		else if (first.equals(Atom.EPSILON) && second instanceof Comp && second.asComp().getFirst() instanceof Star
 				&& second.asComp().getSecond().equals(second.asComp().getFirst().asStar().getOperand()))
 			result = new Star(second.asComp().getFirst());
 

@@ -237,10 +237,10 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Performs the widening between this string and the given one, without
-	 * simplifying (i.e., determinizing and minimizing) the result, and by
-	 * automatically determining the threshold parameter. Such parameter will be
-	 * the difference in size between the two underlying automata, capped at
+	 * Performs the widening between this string and the given one, simplifying
+	 * (i.e., determinizing and minimizing) the result, and by automatically
+	 * determining the threshold parameter. Such parameter will be the
+	 * difference in size between the two underlying automata, capped at
 	 * {@link #WIDENING_CAP}. If the two automata have the same size, the
 	 * threshold will be set to {@link #WIDENING_CAP}.
 	 * 
@@ -253,9 +253,9 @@ public class AutomatonString {
 	}
 
 	/**
-	 * Performs the widening between this string and the given one, without
-	 * simplifying (i.e., determinizing and minimizing) the result, and with the
-	 * given widening threshold.
+	 * Performs the widening between this string and the given one, simplifying
+	 * (i.e., determinizing and minimizing) the result, and with the given
+	 * widening threshold.
 	 * 
 	 * @param other             the other string
 	 * @param wideningThreshold the threshold parameter of the widening
@@ -264,7 +264,7 @@ public class AutomatonString {
 	 * @return the widened string
 	 */
 	public AutomatonString widen(AutomatonString other, int wideningThreshold) {
-		return widen(other, wideningThreshold, false);
+		return widen(other, wideningThreshold, true);
 	}
 
 	/**

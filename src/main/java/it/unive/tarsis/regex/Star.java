@@ -57,9 +57,9 @@ public class Star extends RegularExpression {
 		RegularExpression result;
 
 		if (op instanceof Atom && op.asAtom().isEmpty())
-			result = new Atom("");
+			result = Atom.EPSILON;
 		else if (op instanceof EmptySet)
-			result = new Atom("");
+			result = Atom.EPSILON;
 		else if (op instanceof Star)
 			result = op;
 		else
@@ -183,7 +183,7 @@ public class Star extends RegularExpression {
 	@Override
 	protected RegularExpression unrollStarToFixedLength(int length) {
 		if (length == 0)
-			return new Atom("");
+			return Atom.EPSILON;
 
 		int repetitions = (length / op.maxLength()) + 2;
 		RegularExpression result = null;

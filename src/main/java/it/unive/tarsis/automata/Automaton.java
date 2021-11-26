@@ -610,8 +610,8 @@ public class Automaton {
 		for (Transition t : other.getDelta())
 			newGamma.add(new Transition(mappingA2.get(t.getFrom()), mappingA2.get(t.getTo()), t.getInput()));
 
-		newGamma.add(new Transition(newInitialState, initialA1, new Atom("")));
-		newGamma.add(new Transition(newInitialState, initialA2, new Atom("")));
+		newGamma.add(new Transition(newInitialState, initialA1, Atom.EPSILON));
+		newGamma.add(new Transition(newInitialState, initialA2, Atom.EPSILON));
 
 		return new Automaton(newGamma, newStates).minimize();
 	}
@@ -1060,10 +1060,10 @@ public class Automaton {
 			State newState = new State(s.getState(), false, false);
 			if (s.isFinalState() && s.isInitialState()) {
 				newState.setFinalState(true);
-				newDelta.add(new Transition(newInitialState, newState, new Atom("")));
+				newDelta.add(new Transition(newInitialState, newState, Atom.EPSILON));
 			} else if (s.isFinalState()) {
 				newState.setFinalState(false);
-				newDelta.add(new Transition(newInitialState, newState, new Atom("")));
+				newDelta.add(new Transition(newInitialState, newState, Atom.EPSILON));
 			} else if (s.isInitialState()) {
 				newState.setFinalState(true);
 			}
@@ -1150,7 +1150,7 @@ public class Automaton {
 		// automaton initial state
 		for (State f : firstFinalStates)
 			for (State s : secondInitialStates)
-				newDelta.add(new Transition(mappingFirst.get(f), mappingSecond.get(s), new Atom("")));
+				newDelta.add(new Transition(mappingFirst.get(f), mappingSecond.get(s), Atom.EPSILON));
 
 		return new Automaton(newDelta, newStates).minimize();
 	}
@@ -1316,7 +1316,7 @@ public class Automaton {
 		for (State f : result.getFinalStates())
 			for (State i : result.getInitialStates()) {
 				i.setFinalState(true);
-				result.getDelta().add(new Transition(f, i, new Atom("")));
+				result.getDelta().add(new Transition(f, i, Atom.EPSILON));
 			}
 
 		return result.minimize();
@@ -1605,5 +1605,20 @@ public class Automaton {
 				}
 
 		return mkAutomaton(s);
+	}
+	
+	public Automaton toSingleInitalState() {
+		if (getInitialStates().size() < 2)
+			return this;
+		
+		Automaton a = clone();
+		State newInit = new State("qInit", true, false);
+		a.addState(newInit);
+		for (State i : getInitialStates()) {
+			i.setInitialState(false);
+			a.addTransition(i, i, Atom.EPSILON);
+		}
+		
+		return a;
 	}
 }
