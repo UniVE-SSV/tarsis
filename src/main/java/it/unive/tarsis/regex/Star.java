@@ -125,7 +125,7 @@ public class Star extends RegularExpression {
 
 	@Override
 	public boolean mayContain(String s) {
-		if (op.mayContain(s))
+		if (s.isEmpty() || op.mayContain(s))
 			return true;
 
 		int repetitions = (s.length() / op.maxLength()) + 2;
@@ -139,12 +139,12 @@ public class Star extends RegularExpression {
 
 	@Override
 	public boolean contains(String s) {
-		return false;
+		return s.isEmpty(); // epsilon is contained everywhere
 	}
 
 	@Override
 	public boolean mayStartWith(String s) {
-		if (op.mayStartWith(s))
+		if (s.isEmpty() || op.mayStartWith(s))
 			return true;
 
 		int repetitions = (s.length() / op.maxLength()) + 2;
@@ -158,12 +158,12 @@ public class Star extends RegularExpression {
 
 	@Override
 	public boolean startsWith(String s) {
-		return false;
+		return s.isEmpty(); // epsilon is contained everywhere
 	}
 
 	@Override
 	public boolean mayEndWith(String s) {
-		if (op.mayEndWith(s))
+		if (s.isEmpty() || op.mayEndWith(s))
 			return true;
 
 		int repetitions = (s.length() / op.maxLength()) + 2;
@@ -177,7 +177,7 @@ public class Star extends RegularExpression {
 
 	@Override
 	public boolean endsWith(String s) {
-		return false;
+		return s.isEmpty(); // epsilon is contained everywhere
 	}
 
 	@Override

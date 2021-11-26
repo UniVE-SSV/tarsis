@@ -182,7 +182,7 @@ public class Or extends RegularExpression {
 
 	@Override
 	public boolean mayContain(String s) {
-		return first.contains(s) || second.contains(s);
+		return first.mayContain(s) || second.mayContain(s);
 	}
 
 	@Override
@@ -192,17 +192,17 @@ public class Or extends RegularExpression {
 
 	@Override
 	public boolean mayStartWith(String s) {
-		return first.endsWith(s) || second.endsWith(s);
+		return first.mayStartWith(s) || second.mayEndWith(s);
 	}
 
 	@Override
 	public boolean startsWith(String s) {
-		return first.endsWith(s) && second.endsWith(s);
+		return first.startsWith(s) && second.startsWith(s);
 	}
 
 	@Override
 	public boolean mayEndWith(String s) {
-		return first.endsWith(s) || second.endsWith(s);
+		return first.mayEndWith(s) || second.mayEndWith(s);
 	}
 
 	@Override

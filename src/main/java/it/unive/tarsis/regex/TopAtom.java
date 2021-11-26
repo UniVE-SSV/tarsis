@@ -78,7 +78,7 @@ public class TopAtom extends Atom {
 
 	@Override
 	public boolean contains(String s) {
-		return false;
+		return s.isEmpty(); // epsilon is contained everywhere
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class TopAtom extends Atom {
 
 	@Override
 	public boolean startsWith(String s) {
-		return false;
+		return s.isEmpty(); // epsilon is contained everywhere
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class TopAtom extends Atom {
 
 	@Override
 	public boolean endsWith(String s) {
-		return false;
+		return s.isEmpty(); // epsilon is contained everywhere
 	}
 
 	@Override
@@ -127,32 +127,32 @@ public class TopAtom extends Atom {
 
 			@Override
 			public boolean mayContain(String s) {
-				return false;
+				return s.length() >= 1;
 			}
 
 			@Override
 			public boolean contains(String s) {
-				return false;
+				return s.isEmpty(); // epsilon is contained everywhere
 			}
 
 			@Override
 			public boolean mayStartWith(String s) {
-				return false;
+				return s.length() >= 1;
 			}
 
 			@Override
 			public boolean startsWith(String s) {
-				return false;
+				return s.isEmpty(); // epsilon is contained everywhere
 			}
 
 			@Override
 			public boolean mayEndWith(String s) {
-				return false;
+				return s.length() >= 1;
 			}
 
 			@Override
 			public boolean endsWith(String s) {
-				return false;
+				return s.isEmpty(); // epsilon is contained everywhere
 			}
 		};
 	}
