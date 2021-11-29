@@ -1,20 +1,23 @@
 package it.unive.tarsis.automata.algorithms;
 
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.automata.State;
-import it.unive.tarsis.automata.Transition;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+
 import org.apache.commons.lang3.tuple.Pair;
+
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.automata.State;
+import it.unive.tarsis.automata.Transition;
 
 /**
  * An algorithm that extracts paths from an automaton.
@@ -61,7 +64,8 @@ public class PathExtractor {
 
 			}
 
-			result.add(simplify(path));
+			simplify(path);
+			result.add(path);
 		}
 
 		return result;
@@ -181,21 +185,19 @@ public class PathExtractor {
 		return path;
 	}
 
-	private List<State> simplify(List<State> path) {
-		List<State> result = new LinkedList<>();
-		for (int i = 0; i < path.size(); i++)
-			if (i == path.size() - 1)
-				result.add(path.get(i));
-			else if (path.get(i).equals(path.get(i + 1))) {
-				int j = i;
-				for (j = i; j < path.size() - 1; j++)
-					if (!path.get(j).equals(path.get(j + 1)))
-						break;
-				result.add(path.get(j));
-				i = j;
-			} else
-				result.add(path.get(i));
-
-		return result;
+	private static void simplify(List<State> path) {
+		ListIterator<State> it = path.listIterator();
+		while (it.hasNext()) {
+			if (!it.hasPrevious()) {
+				it.next();
+				continue;
+			}
+			
+			it.previous(); // we move back one to get the two elements to compare
+			State previous = it.next(); 
+			State current = it.next();
+			if (previous.equals(current))
+				it.remove();
+		}
 	}
 }
