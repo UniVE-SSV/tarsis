@@ -14,17 +14,17 @@ public class Transition {
 	/**
 	 * The source state
 	 */
-	private State from;
+	private final State from;
 
 	/**
 	 * The destination state
 	 */
-	private State to;
+	private final State to;
 
 	/**
 	 * The symbol recognized by the transition
 	 */
-	private RegularExpression input;
+	private final RegularExpression input;
 
 	/**
 	 * Builds a new transition.

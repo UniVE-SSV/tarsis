@@ -436,19 +436,18 @@ public class Automaton {
 		return RegexExtractor.getMinimalRegex(this).toString();
 	}
 
-	@Override
-	public Automaton clone() {
+	public Automaton copy() {
 		Set<State> newStates = new HashSet<>();
 		Set<Transition> newDelta = new HashSet<>();
 		HashMap<String, State> nameToStates = new HashMap<String, State>();
 
-		for (State s : this.states) {
+		for (State s : states) {
 			State newState = new State(s.getState(), s.isInitialState(), s.isFinalState());
 			newStates.add(newState);
 			nameToStates.put(newState.getState(), newState);
 		}
 
-		for (Transition t : this.delta)
+		for (Transition t : delta)
 			newDelta.add(new Transition(nameToStates.get(t.getFrom().getState()),
 					nameToStates.get(t.getTo().getState()), t.getInput()));
 
@@ -686,8 +685,8 @@ public class Automaton {
 			if (!hasCycle() && !o.hasCycle())
 				return getLanguage().equals(o.getLanguage());
 
-			Automaton a = clone();
-			Automaton b = o.clone();
+			Automaton a = copy();
+			Automaton b = o.copy();
 
 			a = a.minimize();
 			b = b.minimize();
@@ -1271,7 +1270,7 @@ public class Automaton {
 		if (collected.isEmpty())
 			return this;
 
-		Automaton collapsed = clone();
+		Automaton collapsed = copy();
 		Set<Transition> edgesToRemove = new HashSet<>();
 		Set<State> statesToRemove = new HashSet<>();
 		for (Vector<State> v : collected) {
@@ -1311,7 +1310,7 @@ public class Automaton {
 	 * @return the star automaton
 	 */
 	public Automaton star() {
-		Automaton result = clone();
+		Automaton result = copy();
 
 		for (State f : result.getFinalStates())
 			for (State i : result.getInitialStates()) {
@@ -1481,7 +1480,7 @@ public class Automaton {
 	 * @return the prefix automaton
 	 */
 	public Automaton prefix() {
-		Automaton result = clone();
+		Automaton result = copy();
 
 		for (State s : result.getStates())
 			s.setFinalState(true);
@@ -1496,7 +1495,7 @@ public class Automaton {
 	 * @return the suffix automaton
 	 */
 	public Automaton suffix() {
-		Automaton result = clone();
+		Automaton result = copy();
 
 		for (State s : result.getStates())
 			s.setInitialState(true);
@@ -1611,7 +1610,7 @@ public class Automaton {
 		if (getInitialStates().size() < 2)
 			return this;
 		
-		Automaton a = clone();
+		Automaton a = copy();
 		State newInit = new State("qInit", true, false);
 		a.addState(newInit);
 		for (State i : getInitialStates()) {

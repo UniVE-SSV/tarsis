@@ -11,7 +11,7 @@ public class State {
 	/**
 	 * The name of the state
 	 */
-	private String state;
+	private final String state;
 
 	/**
 	 * True if and only if this state is an accepting state
@@ -67,15 +67,6 @@ public class State {
 	}
 
 	/**
-	 * Updates the name of this state.
-	 * 
-	 * @param state the new name
-	 */
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	/**
 	 * Yields {@code true} if and only if this state is a final state.
 	 * 
 	 * @return {@code true} if that condition holds
@@ -97,23 +88,29 @@ public class State {
 
 	@Override
 	public String toString() {
-		return "[" + this.getState() + "]" + (isInitialState ? "[init]" : "") + (isFinalState ? "[final]" : "");
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof State)
-			return this.getState().equals(((State) other).getState());
-		return false;
+		return state + (isInitialState ? "[init]" : "") + (isFinalState ? "[final]" : "");
 	}
 
 	@Override
 	public int hashCode() {
-		return this.getState().hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		return result;
 	}
 
 	@Override
-	public State clone() {
-		return new State(this.getState(), this.isInitialState, this.isFinalState);
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof State))
+			return false;
+		State other = (State) obj;
+		if (state == null) {
+			if (other.state != null)
+				return false;
+		} else if (!state.equals(other.state))
+			return false;
+		return true;
 	}
 }

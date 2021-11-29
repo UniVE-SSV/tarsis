@@ -297,7 +297,7 @@ public class RegexExtractor {
 	}
 
 	private static RegularExpression getSCCRegex(Automaton a, Set<State> scc, State entry, State exit) {
-		Automaton clone = a.clone();
+		Automaton clone = a.copy();
 		Set<State> statesToRemove = new HashSet<>();
 		Set<Transition> transitionsToRemove = new HashSet<>();
 
