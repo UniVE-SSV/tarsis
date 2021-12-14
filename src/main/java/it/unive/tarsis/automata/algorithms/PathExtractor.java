@@ -1,7 +1,8 @@
 package it.unive.tarsis.automata.algorithms;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -10,10 +11,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
@@ -49,19 +48,17 @@ public class PathExtractor {
 	 * @return the set of all possible paths
 	 */
 	public Set<List<State>> getAllPaths() {
-		Set<List<Transition>> paths = ConcurrentHashMap.newKeySet();
-		Set<List<State>> result = new HashSet<>();
-		depthFirst(automaton.getInitialState(), paths);
+		Set<Transition[]> paths = depthFirst(automaton.getInitialState());
 
-		for (List<Transition> tt : paths) {
-			List<State> path = new LinkedList<>();
+		Set<List<State>> result = new HashSet<>();
+		for (Transition[] tt : paths) {
+			List<State> path = new ArrayList<>(tt.length + 1);
 
 			for (Transition t : tt) {
 				path.add(t.getFrom());
 
 				if (t.getTo().isFinalState())
 					path.add(t.getTo());
-
 			}
 
 			simplify(path);
@@ -71,32 +68,46 @@ public class PathExtractor {
 		return result;
 	}
 
-	private void depthFirst(State src, Set<List<Transition>> paths) {
-		Stack<Pair<State, Deque<Transition>>> ws = new Stack<>();
-		ws.push(Pair.of(src, new ConcurrentLinkedDeque<>()));
+	private Set<Transition[]> depthFirst(State src) {
+		Set<Transition[]> paths = new HashSet<>();
+		Stack<Triple<State, Transition[], int[]>> ws = new Stack<>();
+		ws.push(Triple.of(src, new Transition[0], new int[0]));
 
 		do {
-			Pair<State, Deque<Transition>> current = ws.pop();
+			Triple<State, Transition[], int[]> current = ws.pop();
 			State node = current.getLeft();
-			Deque<Transition> visited = current.getRight();
+			Transition[] visited = current.getMiddle();
+			int[] hashes = current.getRight();
+			int len = visited.length;
 
 			Set<Transition> tr = automaton.getOutgoingTransitionsFrom(node);
 
 			transitions: for (Transition t : tr) {
+				int thash = t.hashCode();
+				
 				int count = 0;
-				for (Transition in : visited)
-					if (in.equals(t) && ++count > 1)
+				for (int i = 0; i < len; i++) {
+					// we look at the element's hash before invoking the 
+					// actual comparison for fast failure
+					if (visited[i] == t || (hashes[i] == thash && t.equals(visited[i])))
+						count++;
+					
+					if (count > 1)
 						continue transitions;
+				}
 
-				visited.add(t);
-
+				Transition[] copy = Arrays.copyOf(visited, len + 1);
+				int[] hashesCopy = Arrays.copyOf(hashes, len + 1);
+				copy[len] = t;
+				hashesCopy[len] = thash;
+				
 				if (t.getTo().isFinalState())
-					paths.add(new LinkedList<>(visited));
-				ws.push(Pair.of(t.getTo(), new LinkedList<>(visited)));
-
-				visited.removeLast();
+					paths.add(copy);
+				ws.push(Triple.of(t.getTo(), copy, hashesCopy));
 			}
 		} while (!ws.isEmpty());
+		
+		return paths;
 	}
 
 	/**
@@ -164,8 +175,8 @@ public class PathExtractor {
 			return d;
 	}
 
-	private static LinkedList<State> getPath(State target, Map<State, State> predecessors) {
-		LinkedList<State> path = new LinkedList<State>();
+	private static List<State> getPath(State target, Map<State, State> predecessors) {
+		List<State> path = new LinkedList<>();
 		State step = target;
 
 		// check if a path exists
