@@ -13,7 +13,7 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'org.ajoberstar.grgit' version '4.0.2'
-    id "com.diffplug.spotless" version "5.8.2"
+    id "com.diffplug.spotless" version "5.15.0"
     id 'checkstyle'
     id 'maven-publish'
     id 'signing'
@@ -29,29 +29,42 @@ repositories {
 
 dependencies {
     api 'org.apache.commons:commons-lang3:3.9'
-	api 'org.apache.logging.log4j:log4j-api:2.13.0'
-	api 'org.apache.logging.log4j:log4j-core:2.13.0'
+	api 'org.apache.logging.log4j:log4j-api:2.17.1'
+	api 'org.apache.logging.log4j:log4j-core:2.17.1'
 
     testImplementation 'junit:junit:4.12'
 }
 
 plugins.withType(JavaPlugin) {
-	def repo = org.ajoberstar.grgit.Grgit.open(dir: rootProject.projectDir)
-	jar.doFirst {
-	    manifest {
-	    	 attributes(
-	            'Implementation-Title': rootProject.name,
-	            'Implementation-Version': project.version,
-	            'Implementation-Vendor': 'Ca\' Foscari University of Venice',
-	            'Created-By': "Gradle ${gradle.gradleVersion}",
-	            'Build-Revision': repo.head().abbreviatedId,
-	            'Build-Tag': repo.describe(tags: true, always: true),
-				'Build-Branch': repo.branch.current().getName(),
-				'Build-Clean': repo.status().isClean(),
-	            'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
-	            'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-	            'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
-	        )
+ 	def git_ready = false
+ 	def repo = null
+    try {
+        repo = org.ajoberstar.grgit.Grgit.open(dir: rootProject.projectDir)
+        git_ready = true
+    } catch (Exception e) {
+        // this means we are building from outside of LiSA, probably from an outer model
+        // we can skip the manifest attributes injection here
+        println('Skipping manifest attriubtes injection because we are not directly building LiSA')
+        println(e)
+    }
+    
+	if (git_ready) {
+		jar.doFirst {
+		    manifest {
+		    	 attributes(
+		            'Implementation-Title': rootProject.name,
+		            'Implementation-Version': project.version,
+		            'Implementation-Vendor': 'Ca\' Foscari University of Venice',
+		            'Created-By': "Gradle ${gradle.gradleVersion}",
+		            'Build-Revision': repo.head().abbreviatedId,
+		            'Build-Tag': repo.describe(tags: true, always: true),
+					'Build-Branch': repo.branch.current().getName(),
+					'Build-Clean': repo.status().isClean(),
+		            'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+		            'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+		            'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+		        )
+		    }
 	    }
     }
 }
