@@ -33,8 +33,7 @@ public class StringSearcher {
 
 	/**
 	 * Builds the searcher. For this algorithm to work correctly, the target
-	 * automaton is first exploded with a call to
-	 * {@link Automaton#explode()}.
+	 * automaton is first exploded with a call to {@link Automaton#explode()}.
 	 * 
 	 * @param origin the target automaton
 	 */
@@ -83,19 +82,30 @@ public class StringSearcher {
 			if (transitions.size() == 0)
 				continue;
 
+			boolean matched = false;
 			for (Transition t : transitions) {
 				if (matching)
-					if (t.getInput().is(searchString.substring(0, 1)))
+					if (t.getInput().is(searchString.substring(0, 1))) {
 						// we found a matching char
 						advanceSearch(path, t);
-					else {
+						matched = true;
+					} else {
 						resetSearchState(path, toSearch);
-						if (t.getInput().is(searchString.substring(0, 1)))
+						if (t.getInput().is(searchString.substring(0, 1))) {
 							startSearch(path, t);
+							matched = true;
+						}
 					}
-				else if (t.getInput().is(searchString.substring(0, 1)))
+				else if (t.getInput().is(searchString.substring(0, 1))) {
 					// we found the beginning of the string
 					startSearch(path, t);
+					matched = true;
+				}
+
+				if (matched)
+					// we break since we do not care about the other transitions
+					// between these two nodes
+					break;
 			}
 
 			if (searchString.isEmpty()) {

@@ -1,12 +1,5 @@
 package it.unive.tarsis.automata.algorithms;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -16,6 +9,12 @@ import it.unive.tarsis.regex.EmptySet;
 import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.Star;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An algorithm that extract regular expressions from automata.
@@ -175,14 +174,14 @@ public class RegexExtractor {
 
 		return false;
 	}
-	
+
 	private static State nextNonInitialState(Iterator<State> it) {
 		while (it.hasNext()) {
 			State cursor = it.next();
 			if (!cursor.isInitialState())
 				return cursor;
 		}
-		
+
 		return null;
 	}
 
@@ -200,23 +199,14 @@ public class RegexExtractor {
 
 		Map<Integer, State> mapping = new HashMap<>();
 		mapping.put(0, a.getInitialState());
-		
+
 		// NOTE: algorithm's indexing is 1-based, java is 0-based
-		
+
 		/*
-		for i = 1 to m:
-		 	if final(i):
-		    	B[i] := ε
-		  	else:
-		    	B[i] := ∅
-		for i = 1 to m:
-  			for j = 1 to m:
-		    	for a in Σ:
-			      	if trans(i, a, j):
-			        	A[i,j] := a
-			      	else:
-			        	A[i,j] := ∅
-		*/
+		 * for i = 1 to m: if final(i): B[i] := ε else: B[i] := ∅ for i = 1 to
+		 * m: for j = 1 to m: for a in Σ: if trans(i, a, j): A[i,j] := a else:
+		 * A[i,j] := ∅
+		 */
 		Iterator<State> it = a.getStates().iterator();
 		for (int i = 0; i < m; i++) {
 			State source = mapping.get(i);
@@ -229,34 +219,29 @@ public class RegexExtractor {
 				B[i] = Atom.EPSILON;
 			else
 				B[i] = EmptySet.INSTANCE;
-			
+
 			for (int j = 0; j < m; j++) {
 				State dest = mapping.get(j);
 				if (dest == null) {
 					dest = nextNonInitialState(it);
 					mapping.put(j, dest);
 				}
-				
+
 				Iterator<Transition> tt = a.getAllTransitionsConnecting(source, dest).iterator();
 				if (!tt.hasNext())
-					A[i][j] = EmptySet.INSTANCE; 
+					A[i][j] = EmptySet.INSTANCE;
 				else {
-					A[i][j] = tt.next().getInput(); 
+					A[i][j] = tt.next().getInput();
 					while (tt.hasNext())
 						A[i][j] = new Or(A[i][j], tt.next().getInput());
 				}
-			}				
+			}
 		}
 
 		/*
-		for n = m decreasing to 1:
-		  	B[n] := star(A[n,n]) . B[n]
-		  	for j = 1 to n:
-		    	A[n,j] := star(A[n,n]) . A[n,j];
-		  	for i = 1 to n:
-		    	B[i] += A[i,n] . B[n]
-		    	for j = 1 to n:
-		      		A[i,j] += A[i,n] . A[n,j]
+		 * for n = m decreasing to 1: B[n] := star(A[n,n]) . B[n] for j = 1 to
+		 * n: A[n,j] := star(A[n,n]) . A[n,j]; for i = 1 to n: B[i] += A[i,n] .
+		 * B[n] for j = 1 to n: A[i,j] += A[i,n] . A[n,j]
 		 */
 		for (int n = m - 1; n >= 0; n--) {
 			Star star_nn = new Star(A[n][n]);

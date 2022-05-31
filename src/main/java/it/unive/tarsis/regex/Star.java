@@ -1,10 +1,9 @@
 package it.unive.tarsis.regex;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.strings.ExtString;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A regular expression representing a loop, repeated an arbitrary number of

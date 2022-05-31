@@ -6,13 +6,11 @@ import static it.unive.tarsis.automata.Automaton.mkTopAutomaton;
 import static it.unive.tarsis.automata.Automaton.union;
 import static org.junit.Assert.assertEquals;
 
+import it.unive.tarsis.automata.Automaton;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-
 import org.junit.Test;
-
-import it.unive.tarsis.automata.Automaton;
 
 public class StringReplacerTest {
 

@@ -2,16 +2,14 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.junit.Test;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.regex.Atom;
 import it.unive.tarsis.regex.Comp;
 import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.TopAtom;
+import java.util.Collection;
+import java.util.HashSet;
+import org.junit.Test;
 
 public class ReplaceTest {
 
@@ -213,7 +211,7 @@ public class ReplaceTest {
 		Automaton a = Automaton.union(Automaton.mkAutomaton("pearl"), Automaton.mkAutomaton("garnet"));
 
 		Automaton search = Automaton.union(Automaton.mkAutomaton(""), // apaeaaarala,
-																	// agaaaranaeata
+																		// agaaaranaeata
 				Automaton.mkAutomaton("ar"), // peal, ganet
 				Automaton.mkAutomaton("rose"), // pearl, garnet
 				Automaton.mkAutomaton("et")); // pearl, garna
@@ -353,6 +351,30 @@ public class ReplaceTest {
 		// (a | b)T.replace("abc", "") = {T, bT}
 		checkEquality(a.replace(search, replacer).getLanguage(), TopAtom.INSTANCE.toString(),
 				"b" + TopAtom.INSTANCE.toString());
+	}
+
+	@Test
+	public void replaceTestWithTop006() {
+
+		Automaton a = new Comp(new Or(new Atom("a"), new Atom("b")), TopAtom.INSTANCE).toAutomaton();
+		Automaton search = Automaton.mkAutomaton("b");
+		Automaton replacer = Automaton.mkAutomaton("");
+
+		// (a | b)T.replace("b", "") = {aT, T}
+		checkEquality(a.replace(search, replacer).getLanguage(), TopAtom.INSTANCE.toString(),
+				"a" + TopAtom.INSTANCE.toString());
+	}
+
+	@Test
+	public void replaceTestWithBranch001() {
+
+		Automaton a = new Or(new Atom("a"), new Comp(new Atom("a"), new Or(new Atom("b"), new Atom("c"))))
+				.toAutomaton();
+		Automaton search = Automaton.mkAutomaton("");
+		Automaton replacer = Automaton.mkAutomaton("x");
+
+		// (a | a(b|c)).replace("", "x") = {xax, xaxbx, xaxcx}
+		checkEquality(a.replace(search, replacer).getLanguage(), "xax", "xaxbx", "xaxcx");
 	}
 
 	private void checkEquality(Collection<String> computed, String... expected) {

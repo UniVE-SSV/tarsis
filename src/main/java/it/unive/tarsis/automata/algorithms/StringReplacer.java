@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 /**
  * An algorithm that replaces strings across all paths of an automaton.
@@ -31,8 +32,7 @@ public class StringReplacer {
 
 	/**
 	 * Builds the replacer. For this algorithm to work correctly, the target
-	 * automaton is first exploded with a call to
-	 * {@link Automaton#explode()}.
+	 * automaton is first exploded with a call to {@link Automaton#explode()}.
 	 * 
 	 * @param origin the target automaton
 	 */
@@ -96,13 +96,12 @@ public class StringReplacer {
 			Set<State> states = new HashSet<>();
 			Set<Transition> delta = new HashSet<>();
 
+			Function<State, State> maker = s -> new State("r" + counter.getAndIncrement(), false, false);
 			for (State origin : replaced.getStates()) {
-				State r = conversion.computeIfAbsent(origin,
-						s -> new State("r" + counter.getAndIncrement(), false, false));
+				State r = conversion.computeIfAbsent(origin, maker);
 				states.add(r);
 				for (Transition t : replaced.getOutgoingTransitionsFrom(origin)) {
-					State dest = conversion.computeIfAbsent(t.getTo(),
-							s -> new State("r" + counter.getAndIncrement(), false, false));
+					State dest = conversion.computeIfAbsent(t.getTo(), maker);
 					states.add(dest);
 					delta.add(new Transition(r, dest, t.getInput()));
 				}
@@ -110,8 +109,8 @@ public class StringReplacer {
 
 			origin.getStates().addAll(states);
 			origin.getDelta().addAll(delta);
-			origin.addTransition(path.firstElement().getFrom(), conversion.get(replaced.getInitialState()),
-					Atom.EPSILON);
+			for (State s : replaced.getInitialStates())
+				origin.addTransition(path.firstElement().getFrom(), conversion.get(s), Atom.EPSILON);
 			for (State f : replaced.getFinalStates())
 				origin.addTransition(conversion.get(f), path.lastElement().getTo(), Atom.EPSILON);
 
@@ -125,52 +124,53 @@ public class StringReplacer {
 		AtomicLong counter = new AtomicLong();
 		Set<State> states = new HashSet<>();
 		Set<Transition> delta = new HashSet<>();
-		Set<Transition> edgesToRemove = new HashSet<>();
+
+		// states will be a superset of the original ones,
+		// except that all final states are tuned non-final:
+		// all paths will end with `str`
+		Map<State, State> mapper = new HashMap<>();
+		origin.getStates().forEach(s -> mapper.put(s, new State(s.getState(), s.isInitialState(), false)));
+		states.addAll(mapper.values());
+
+		Function<State, State> maker = s -> new State("r" + counter.getAndIncrement(), false, false);
 
 		for (Transition t : origin.getDelta()) {
 			Map<State, State> conversion = new HashMap<>();
 
 			for (State origin : str.getStates()) {
-				State r = conversion.computeIfAbsent(origin,
-						s -> new State("r" + counter.getAndIncrement(), false, false));
+				State r = conversion.computeIfAbsent(origin, maker);
 				states.add(r);
 				for (Transition tt : str.getOutgoingTransitionsFrom(origin)) {
-					State dest = conversion.computeIfAbsent(tt.getTo(),
-							s -> new State("r" + counter.getAndIncrement(), false, false));
+					State dest = conversion.computeIfAbsent(tt.getTo(), maker);
 					states.add(dest);
 					delta.add(new Transition(r, dest, tt.getInput()));
 				}
 			}
 
-			delta.add(new Transition(t.getFrom(), conversion.get(str.getInitialState()), Atom.EPSILON));
+			for (State s : str.getInitialStates())
+				delta.add(new Transition(mapper.get(t.getFrom()), conversion.get(s), Atom.EPSILON));
 			for (State f : str.getFinalStates())
-				delta.add(new Transition(conversion.get(f), t.getTo(), t.getInput()));
-			edgesToRemove.add(t);
+				delta.add(new Transition(conversion.get(f), mapper.get(t.getTo()), t.getInput()));
 		}
 
+		maker = s -> new State("r" + counter.getAndIncrement(), false, s.isFinalState());
 		for (State f : origin.getFinalStates()) {
 			Map<State, State> conversion = new HashMap<>();
 
 			for (State origin : str.getStates()) {
-				State r = conversion.computeIfAbsent(origin,
-						s -> new State("r" + counter.getAndIncrement(), false, origin.isFinalState()));
+				State r = conversion.computeIfAbsent(origin, maker);
 				states.add(r);
 				for (Transition tt : str.getOutgoingTransitionsFrom(origin)) {
-					State dest = conversion.computeIfAbsent(tt.getTo(),
-							s -> new State("r" + counter.getAndIncrement(), false, origin.isFinalState()));
+					State dest = conversion.computeIfAbsent(tt.getTo(), maker);
 					states.add(dest);
 					delta.add(new Transition(r, dest, tt.getInput()));
 				}
 			}
 
-			delta.add(new Transition(f, conversion.get(str.getInitialState()), Atom.EPSILON));
+			for (State s : str.getInitialStates())
+				delta.add(new Transition(f, conversion.get(s), Atom.EPSILON));
 		}
 
-		origin.removeTransitions(edgesToRemove);
-		origin.getStates().addAll(states);
-		origin.getDelta().addAll(delta);
-		origin.recomputeOutgoingAdjacencyList();
-
-		return origin;
+		return new Automaton(delta, states);
 	}
 }

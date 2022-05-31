@@ -2,12 +2,6 @@ package it.unive.tarsis;
 
 import static it.unive.tarsis.automata.algorithms.RegexExtractor.getMinimalBrzozowskiRegex;
 
-import java.util.Collection;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
@@ -15,6 +9,10 @@ import it.unive.tarsis.automata.algorithms.IndexFinder;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.TopAtom;
 import it.unive.tarsis.strings.ExtString;
+import java.util.Collection;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * A string modeled through the Tarsis abstract domain.

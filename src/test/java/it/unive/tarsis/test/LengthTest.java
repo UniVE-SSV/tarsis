@@ -2,11 +2,10 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import it.unive.tarsis.AutomatonString;
 import it.unive.tarsis.AutomatonString.Interval;
 import it.unive.tarsis.automata.Automaton;
+import org.junit.Test;
 
 public class LengthTest {
 

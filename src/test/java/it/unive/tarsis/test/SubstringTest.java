@@ -10,11 +10,6 @@ import static it.unive.tarsis.strings.ExtString.mkStrings;
 import static it.unive.tarsis.strings.ExtString.mkTopString;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.junit.Test;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.regex.Atom;
 import it.unive.tarsis.regex.Comp;
@@ -22,6 +17,9 @@ import it.unive.tarsis.regex.Or;
 import it.unive.tarsis.regex.Star;
 import it.unive.tarsis.regex.TopAtom;
 import it.unive.tarsis.strings.ExtString;
+import java.util.Collection;
+import java.util.HashSet;
+import org.junit.Test;
 
 public class SubstringTest {
 

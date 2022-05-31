@@ -2,15 +2,13 @@ package it.unive.tarsis.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-
-import org.junit.Test;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.algorithms.RegexExtractor;
 import it.unive.tarsis.strings.ExtString;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+import org.junit.Test;
 
 public class RandomSubstringTest {
 

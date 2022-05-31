@@ -10,16 +10,14 @@ import static it.unive.tarsis.test.TestUtil.build;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Set;
-
-import org.junit.Test;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.automata.State;
 import it.unive.tarsis.automata.Transition;
 import it.unive.tarsis.regex.Atom;
 import it.unive.tarsis.regex.RegularExpression;
 import it.unive.tarsis.regex.TopAtom;
+import java.util.Set;
+import org.junit.Test;
 
 public class SinglePathsTest {
 	@Test

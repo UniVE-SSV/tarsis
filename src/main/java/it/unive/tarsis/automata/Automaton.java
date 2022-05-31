@@ -1,5 +1,14 @@
 package it.unive.tarsis.automata;
 
+import it.unive.tarsis.automata.algorithms.PathExtractor;
+import it.unive.tarsis.automata.algorithms.RegexExtractor;
+import it.unive.tarsis.automata.algorithms.StringReplacer;
+import it.unive.tarsis.regex.Atom;
+import it.unive.tarsis.regex.RegularExpression;
+import it.unive.tarsis.regex.TopAtom;
+import it.unive.tarsis.strings.ExtChar;
+import it.unive.tarsis.strings.ExtString;
+import it.unive.tarsis.strings.TopExtChar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
@@ -13,18 +22,7 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
-
-import it.unive.tarsis.automata.algorithms.PathExtractor;
-import it.unive.tarsis.automata.algorithms.RegexExtractor;
-import it.unive.tarsis.automata.algorithms.StringReplacer;
-import it.unive.tarsis.regex.Atom;
-import it.unive.tarsis.regex.RegularExpression;
-import it.unive.tarsis.regex.TopAtom;
-import it.unive.tarsis.strings.ExtChar;
-import it.unive.tarsis.strings.ExtString;
-import it.unive.tarsis.strings.TopExtChar;
 
 /**
  * An automaton, represented as a set of states and a set of transitions.
@@ -436,6 +434,11 @@ public class Automaton {
 		return RegexExtractor.getMinimalRegex(this).toString();
 	}
 
+	/**
+	 * Deep-copies this automaton to a new one.
+	 * 
+	 * @return the copied automaton.
+	 */
 	public Automaton copy() {
 		Set<State> newStates = new HashSet<>();
 		Set<Transition> newDelta = new HashSet<>();
@@ -1227,6 +1230,14 @@ public class Automaton {
 			State from = v.get(i);
 			State to = v.get(i + 1);
 			if (getAllTransitionsConnecting(from, to).size() != 1) {
+				// more than one edge connecting the nodes: this is an or
+				if (collecting) {
+					collecting = false;
+					collected.add(sequence);
+					sequence = new Vector<>();
+				}
+			} else if (getIngoingTransitionsFrom(to).size() != 1) {
+				// more than one edge reaching `to`: this is the join of an or
 				if (collecting) {
 					collecting = false;
 					collected.add(sequence);
@@ -1234,6 +1245,7 @@ public class Automaton {
 				}
 			} else if ((tmp = getOutgoingTransitionsFrom(to)).size() == 1
 					&& !(tmp.iterator().next().getInput() instanceof TopAtom)) {
+				// reading just a symbol that is not top!
 				sequence.add(to);
 				if (!collecting)
 					collecting = true;
@@ -1605,11 +1617,19 @@ public class Automaton {
 
 		return mkAutomaton(s);
 	}
-	
+
+	/**
+	 * If this automaton has a single initial state, this method returns
+	 * {@code this}. Otherwise,it yields a new one where a new unique initial
+	 * state has been introduced, connected to the original initial states
+	 * through epsilon-transitions.
+	 * 
+	 * @return an automaton with a single initial state
+	 */
 	public Automaton toSingleInitalState() {
 		if (getInitialStates().size() < 2)
 			return this;
-		
+
 		Automaton a = copy();
 		State newInit = new State("qInit", true, false);
 		a.addState(newInit);
@@ -1617,7 +1637,7 @@ public class Automaton {
 			i.setInitialState(false);
 			a.addTransition(i, i, Atom.EPSILON);
 		}
-		
+
 		return a;
 	}
 }

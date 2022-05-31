@@ -1,9 +1,8 @@
 package it.unive.tarsis.regex;
 
+import it.unive.tarsis.automata.Automaton;
 import java.util.HashSet;
 import java.util.Set;
-
-import it.unive.tarsis.automata.Automaton;
 
 /**
  * A regular expression representing an or between two other regular

@@ -1,10 +1,9 @@
 package it.unive.tarsis.regex;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.unive.tarsis.automata.Automaton;
 import it.unive.tarsis.strings.ExtString;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A regular expression representing a single string.
@@ -13,7 +12,10 @@ import it.unive.tarsis.strings.ExtString;
  * @author <a href="mailto:luca.negrini@unive.it">Luca Negrini</a>
  */
 public class Atom extends RegularExpression {
-	
+
+	/**
+	 * A unique constant for the epsilon (empty) string.
+	 */
 	public static final Atom EPSILON = new Atom("");
 
 	private String string;

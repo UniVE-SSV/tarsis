@@ -1,5 +1,8 @@
 package it.unive.tarsis.automata.algorithms;
 
+import it.unive.tarsis.automata.Automaton;
+import it.unive.tarsis.automata.State;
+import it.unive.tarsis.automata.Transition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,12 +14,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-
 import org.apache.commons.lang3.tuple.Triple;
-
-import it.unive.tarsis.automata.Automaton;
-import it.unive.tarsis.automata.State;
-import it.unive.tarsis.automata.Transition;
 
 /**
  * An algorithm that extracts paths from an automaton.
@@ -84,14 +82,14 @@ public class PathExtractor {
 
 			transitions: for (Transition t : tr) {
 				int thash = t.hashCode();
-				
+
 				int count = 0;
 				for (int i = 0; i < len; i++) {
-					// we look at the element's hash before invoking the 
+					// we look at the element's hash before invoking the
 					// actual comparison for fast failure
 					if (visited[i] == t || (hashes[i] == thash && t.equals(visited[i])))
 						count++;
-					
+
 					if (count > 1)
 						continue transitions;
 				}
@@ -100,13 +98,13 @@ public class PathExtractor {
 				int[] hashesCopy = Arrays.copyOf(hashes, len + 1);
 				copy[len] = t;
 				hashesCopy[len] = thash;
-				
+
 				if (t.getTo().isFinalState())
 					paths.add(copy);
 				ws.push(Triple.of(t.getTo(), copy, hashesCopy));
 			}
 		} while (!ws.isEmpty());
-		
+
 		return paths;
 	}
 
@@ -203,9 +201,10 @@ public class PathExtractor {
 				it.next();
 				continue;
 			}
-			
-			it.previous(); // we move back one to get the two elements to compare
-			State previous = it.next(); 
+
+			it.previous(); // we move back one to get the two elements to
+							// compare
+			State previous = it.next();
 			State current = it.next();
 			if (previous.equals(current))
 				it.remove();
