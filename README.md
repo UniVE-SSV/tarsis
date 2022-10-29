@@ -6,7 +6,7 @@ Implementation of _Twinning automata and regular expressions for string static a
 
 Links:
 
-* [Preprintg](https://arxiv.org/abs/2006.02715)
+* [Preprint](https://arxiv.org/abs/2006.02715)
 * [Published version](https://link.springer.com/chapter/10.1007/978-3-030-67067-2_13)
 
 ## How to use the abstract domain ##
